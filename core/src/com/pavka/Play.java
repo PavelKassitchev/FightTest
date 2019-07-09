@@ -28,16 +28,16 @@ public class Play extends Stage implements Screen {
     public static int turn;
     public static final String MAP = "maps/WarMap.tmx";
 
-    public static TiledMap map = new TmxMapLoader().load(MAP);
+    //public static TiledMap map = new TmxMapLoader().load(MAP);
 
 
     public static HexGraph hexGraph;
 
     public static GraphPath<Hex> graphPath;
 
-    public static MapLayer objectLayer = map.getLayers().get("ObjectLayer");
-    ;
-    public static TiledMapTileLayer tileLayer = (TiledMapTileLayer) map.getLayers().get("TileLayer");
+    //public static MapLayer objectLayer = map.getLayers().get("ObjectLayer");
+
+    ///public static TiledMapTileLayer tileLayer = (TiledMapTileLayer) map.getLayers().get("TileLayer");
     public boolean newMode;
     Hex startHex;
     Hex endHex;
@@ -89,7 +89,7 @@ public class Play extends Stage implements Screen {
         float h = Gdx.graphics.getHeight();
 
         shapeRenderer = new ShapeRenderer();
-        renderer = new MyInnerRenderer(map);
+        //renderer = new MyInnerRenderer(map);
         camera = (OrthographicCamera) getCamera();
         camera.setToOrtho(false, w, h);
         Gdx.input.setInputProcessor(this);
@@ -143,7 +143,7 @@ public class Play extends Stage implements Screen {
 
     @Override
     public void dispose() {
-        map.dispose();
+        //map.dispose();
         renderer.dispose();
         shapeRenderer.dispose();
     }
@@ -177,14 +177,14 @@ public class Play extends Stage implements Screen {
             whiteTroops.add(force);
             addActor(force);*/
 
-            Force france = Test.force1;
-            france.setPlay(this);
+            //Force france = Test.force1;
+            //france.setPlay(this);
             //france.hex = hexGraph.getHex(8, 4);
-            france.order.seekBattle = true;
-            france.order.isForaging = 0.8;
-            france.name = "France";
-            whiteTroops.add(france);
-            addActor(france);
+            //france.order.seekBattle = true;
+            ///france.order.isForaging = 0.8;
+            //rance.name = "France";
+            //whiteTroops.add(france);
+            //addActor(france);
         }
 
         if(keycode == Input.Keys.O) {
@@ -194,14 +194,14 @@ public class Play extends Stage implements Screen {
             force.name = "2.Squadron";
             blackTroops.add(force);
             addActor(force);*/
-            Force austria = Test.force2;
-            austria.setPlay(this);
+           // Force austria = Test.force2;
+           // austria.setPlay(this);
             //austria.hex = hexGraph.getHex(18, 18);
-            austria.order.seekBattle = true;
-            austria.order.isForaging = 0.8;
-            austria.name = "Austria";
-            blackTroops.add(austria);
-            addActor(austria);
+           // austria.order.seekBattle = true;
+           // austria.order.isForaging = 0.8;
+           // austria.name = "Austria";
+           // blackTroops.add(austria);
+           // addActor(austria);
         }
 
 

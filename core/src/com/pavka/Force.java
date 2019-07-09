@@ -24,8 +24,8 @@ public class Force extends Image {
 
     public Play play;
 
-    public Texture textureFrance = new Texture("symbols/CavBlueDivision.png");
-    public Texture textureAustria = new Texture("symbols/CavRedDivision.png");
+   // public Texture textureFrance = new Texture("symbols/CavBlueDivision.png");
+  //  public Texture textureAustria = new Texture("symbols/CavRedDivision.png");
 
     public boolean isSelected;
 
@@ -69,10 +69,10 @@ public class Force extends Image {
     double speed;
 
     public void draw(Batch batch, float alpha) {
-        Texture texture = nation == FRANCE ? textureFrance : textureAustria;
+        //Texture texture = nation == FRANCE ? textureFrance : textureAustria;
 
-        if (!isSelected) batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE, IMAGE_SIZE);
-        else batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE * 1.1f, IMAGE_SIZE * 1.1f);
+      //  if (!isSelected) batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE, IMAGE_SIZE);
+      //  else batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE * 1.1f, IMAGE_SIZE * 1.1f);
 
         //THIS IS FOR DELAYED VIEWS
 
@@ -122,8 +122,7 @@ public class Force extends Image {
     }
 
     public Hex getBackHex() {
-        if (backHex == null) System.out.println("BACK HEX NULL!");
-        else System.out.println("BACK HEX IS NOT NULL!");
+
         return backHex;
     }
 
@@ -154,37 +153,23 @@ public class Force extends Image {
     }
 
     public void retreat() {
-        double dispersal = 0.2;
-        Random random = new Random();
-        double d = 1 + 2 * dispersal;
-        double s = random.nextDouble() * d;
-        Direction direction;
-        Hex back;
-        if (s < dispersal) direction = order.retreatDirection.getLeftForward();
-        else if (s > dispersal + 1) direction = order.retreatDirection.getRightForward();
-        else direction = order.retreatDirection;
 
-        back = hex.getNeighbour(direction);
-        System.out.println(name + " Retreat Order Direction = " + order.retreatDirection + " But retreat to " + direction);
-
-        moveTo(back);
-        trace.add(back);
     }
 
     public void setRetreatDirection(Force enemy) {
         if (enemy.getForwardHex() != null) {
             order.retreatDirection = hex.getDirection(enemy.getForwardHex());
-            System.out.println("Forward is not null");
+
         }
         else if (getBackHex() != null) {
             order.retreatDirection = hex.getDirection(getBackHex());
-            System.out.println("Back is not null");
+
         }
         else {
             order.retreatDirection = Direction.getRandom();
-            System.out.println("ELSE");
+
         }
-        System.out.println("Retreat Direction = " + order.retreatDirection + " " + name + " " + nation);
+
     }
 
     //STATIC SECTION
@@ -257,7 +242,7 @@ public class Force extends Image {
 
     public Force detach(Force force) {
         force.isSub = false;
-        System.out.println("Detaching... From " + force.superForce.name + " Play: " + force.superForce.play);
+        //System.out.println("Detaching... From " + force.superForce.name + " Play: " + force.superForce.play);
         force.superForce = null;
         force.hex = hex;
         hex.forces.add(force);
@@ -271,7 +256,7 @@ public class Force extends Image {
 
         //force.setBounds(hex.getRelX() - 8, hex.getRelY() - 8, 12, 12);
         if (play != null) {
-            System.out.println("Detaching from... Strength: " + force.strength + " Hex: " + force.hex.getRelX() + " " + force.hex.getRelY());
+            //System.out.println("Detaching from... Strength: " + force.strength + " Hex: " + force.hex.getRelX() + " " + force.hex.getRelY());
             force.setBounds(hex.getRelX() - 8, hex.getRelY() - 8, 12, 12);
             play.addActor(force);
             force.play = play;
@@ -893,16 +878,16 @@ public class Force extends Image {
         for (Hex h : hex.getNeighbours()) {
             if (space <= h.currentHarvest) {
                 h.currentHarvest -= space;
-                System.out.println("neighbour: " + h.currentHarvest);
-                System.out.println(h.col + " " + h.row);
+                //System.out.println("neighbour: " + h.currentHarvest);
+                //System.out.println(h.col + " " + h.row);
                 food += space;
                 break;
             } else {
                 food += h.currentHarvest;
                 space -= h.currentHarvest;
                 h.currentHarvest = 0;
-                System.out.println("ZERO");
-            }
+               //System.out.println("ZERO");
+           }
         }
         distributeFood(food);
         return food;

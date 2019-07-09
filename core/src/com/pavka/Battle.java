@@ -93,7 +93,7 @@ public class Battle {
 
     public int resolve() {
 
-        System.out.println("The battle begins! " + attacker.hex.getRelX() + attacker.hex.getRelY());
+        System.out.println("The battle begins! ");
         System.out.println("Attacker " + attacker.nation + " " + attacker.strength + " men");
         System.out.println("Defender " + defender.nation + " " + defender.strength + " men");
         //Test.list(attacker);
@@ -117,14 +117,14 @@ public class Battle {
 
         if (winner == 1) {
             defender.retreat();
-            System.out.println("Defender retreated to Hex " + defender.hex.col + " " + defender.hex.row);
+
             int i = 0;
             for (Unit unit : disorderedDef) {
                 defenderRouted += unit.strength;
                 unit.name = "Defender unit No." + (++i);
                 unit.retreat();
                 if (count > 1 && random.nextBoolean()) unit.retreat();
-                System.out.println(unit.name + " with Retreat Order to " + unit.order.retreatDirection + " retreated to Hex " + unit.hex.col + " " + unit.hex.row);
+
             }
 
             //System.out.println("Attacker took prisoners: " + pursuit(defenderRooted));
@@ -150,14 +150,13 @@ public class Battle {
 
         } else {
             attacker.retreat();
-            System.out.println("Attacker retreated to Hex " + attacker.hex.col + " " + attacker.hex.row);
             int i = 0;
             for (Unit unit : disorderedAtt) {
                 attackerRouted += unit.strength;
                 unit.name = "Attacker Unit No." + (++i);
                 unit.retreat();
                 if (count > 1 && random.nextBoolean()) unit.retreat();
-                System.out.println(unit.name + " with Retreat Order to " + unit.order.retreatDirection + " retreated to Hex " + unit.hex.col + " " + unit.hex.row);
+
             }
             //System.out.println("Defender took prisoners: " + pursuit(attackerRooted));
             attackerImprisoned = pursuit(attackerRouted);
@@ -188,9 +187,11 @@ public class Battle {
         System.out.println("Attacker left: " + attacker.strength + " routed: " + (attackerRouted - attackerImprisoned));
         System.out.println("Defender left: " + defender.strength + " routed: " + (defenderRouted - defenderImprisoned));
 
-        Test.list(attacker);
-        Test.list(defender);;
+        //Test.list(attacker);
+        //Test.list(defender);;
         System.out.println("Number of rounds: " + count);
+        System.out.println();
+        System.out.println();
 
         return winner;
     }

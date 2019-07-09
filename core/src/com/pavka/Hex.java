@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 
 public class Hex extends Image {
-    public static TiledMapTileLayer layer = (TiledMapTileLayer) (Play.map).getLayers().get("TileLayer");
+    //public static TiledMapTileLayer layer = (TiledMapTileLayer) (Play.map).getLayers().get("TileLayer");
     public int col;
     public int row;
     public String name;
@@ -32,7 +32,7 @@ public class Hex extends Image {
 
         col = q;
         row = r;
-        cell = layer.getCell(col, row);
+        //cell = layer.getCell(col, row);
         forces = new Array<Force>();
         setBounds(getRelX() - 8, getRelY() - 8, 16, 16);
         currentHarvest = maxHarvest;

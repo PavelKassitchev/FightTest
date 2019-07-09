@@ -10,7 +10,7 @@ public class MileStone extends Image {
 
     Hex hex;
     int days;
-    BitmapFont font = new BitmapFont();
+   // BitmapFont font = new BitmapFont();
 
     public MileStone() {
 
@@ -22,8 +22,8 @@ public class MileStone extends Image {
 
     public void draw(Batch batch, float alpha) {
 
-        font.getData().setScale(0.8f);
-        font.draw(batch, String.valueOf(days), hex.getX(), hex.getY());
+     //   font.getData().setScale(0.8f);
+     //   font.draw(batch, String.valueOf(days), hex.getX(), hex.getY());
     }
     /*public void act(float delta) {
 

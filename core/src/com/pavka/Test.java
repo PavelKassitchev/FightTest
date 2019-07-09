@@ -7,109 +7,42 @@ import static com.pavka.Nation.*;
 
 public class Test {
 
-    static Hex hex = Play.hexGraph.getHex(4, 8);
-    static Hex hex2 = Play.hexGraph.getHex(16, 16);
-    static Force force1;
-    static Force force2;
+    static Hex hex = new Hex();
 
-    static
-    {
-
-        Force regiment11 = new Force(new Battalion(FRANCE, hex), new Battalion(FRANCE, hex), new Battalion(FRANCE, hex));
-        regiment11.name = "1.Regiment";
-        Force regiment12 = new Force(new Battalion(FRANCE, hex), new Battalion(FRANCE, hex), new Battalion(FRANCE, hex));
-        regiment12.name = "2.Regiment";
-        Force regiment13 = new Force(new Battalion(FRANCE, hex), new Battalion(FRANCE, hex), new Battalion(FRANCE, hex));
-        regiment13.name = "3.Regiment";
-        Force regiment14 = new Force(new Battalion(FRANCE, hex), new Battalion(FRANCE, hex), new Battalion(FRANCE, hex));
-        regiment14.name = "4.Regiment";
-        Force brigade11 = new Force(regiment11, regiment12);
-        brigade11.name = "1.Brigade";
-        Force brigade12 = new Force (regiment13, regiment14);
-        brigade12.name = "2.Brigade";
-        force1 = new Force(brigade11, brigade12);
-        force1.attach(new Squadron(FRANCE, hex));
-        force1.attach(new Squadron(FRANCE, hex));
-        Force artillery1 = new Force(new Battery(FRANCE, hex), new Battery(FRANCE, hex), new Battery(FRANCE, hex), new Battery(FRANCE, hex));
-        artillery1.name = "Artillery Division";
-        force1.attach(artillery1);
-        force1.name = "French division";
-        force1.order.seekBattle = true;
-        force1.order.retreatLevel = 0.7;
-
-        Force regiment21 = new Force(new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2));
-        regiment21.name = "Regiment-1";
-        Force regiment22 = new Force(new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2));
-        regiment22.name = "Regiment-2";
-        Force regiment23 = new Force(new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2));
-        regiment23.name = "Regiment-3";
-        Force regiment24 = new Force(new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2), new Battalion(AUSTRIA, hex2));
-        regiment24.name = "Regiment-4";
-        Force brigade21 = new Force(regiment21, regiment22);
-        brigade21.name = "Brigade-1";
-        Force brigade22 = new Force (regiment23, regiment24);
-        brigade22.name = "Brigade-2";
-        force2 = new Force(brigade21, brigade22);
-        force2.attach(new Squadron(AUSTRIA, hex2));
-        force2.attach(new Squadron(AUSTRIA, hex2));
-        Force artillery2 = new Force(new Battery(AUSTRIA, hex2), new Battery(AUSTRIA, hex2), new Battery(AUSTRIA, hex2), new Battery(AUSTRIA, hex2));
-        artillery2.name = "Austrian Artillery";
-        force2.attach(artillery2);
-        force2.name = "Austrian Division";
-        force2.order.seekBattle = true;
-        force2.order.retreatLevel = 0.7;
-    }
 
     public static void main(String[] args) {
 
         Force france = createForce(FRANCE,12, 2, 4);
         Force austria = createForce(AUSTRIA, 12, 2, 4);
-        //Force austria = new Squadron(AUSTRIA, hex);
-        france.order = new Order(true, 0.4, 0);
-        austria.order = new Order(true, 0.4, 0);
-        //Force f = new Force(new Battalion(FRANCE, hex), new Battalion(FRANCE, hex));
-        //Force w = new Wagon(FRANCE, hex);
-        //france.attach(f);
-        /*Force france = new Force(new Battalion(FRANCE, hex, 50), new Battalion(FRANCE, hex, 50),
-                new Battalion(FRANCE, hex, 50), new Battalion(FRANCE, hex, 50), new Battalion(FRANCE, hex, 50));*/
-        //france.attach(f);
-        //france.attach(w);
-        //austria.attach(new Battalion(AUSTRIA, hex));
-        //austria.attach(new Squadron(AUSTRIA, hex));
 
-        /*System.out.println("Before the battle");
-        System.out.println();
-        list(france);
-        list(austria);
-        System.out.println();*/
+        Force f = createForce(FRANCE, 0, 11, 1);
+        Force a = createForce(AUSTRIA, 0, 10, 1);
 
-        //double a = france.unloadAmmo();
-        //System.out.println("UNLOADED: " + a);
-        //double n = france.loadAmmo(INFANTRY, CAVALRY);
-        //System.out.println("LOADED: "+ n);
-        //france.distributeAmmo(15.0);
+        france.attach(f);
+        austria.attach(a);
 
-        /*Battle battle = new Battle(france, austria);
+        france.order = new Order(true, 0.7, 0);
+        austria.order = new Order(true, 0.7, 0);
 
 
-        //getStat(france, austria);
+        Battle battle = new Battle(france, austria);
+
+
         //battle.longDistanceBombing();
 
 
-        battle.resolve();
+        //battle.resolve();
         //battle.resolveStage();
         //battle.resolveStage();
         //battle.resolveStage();
         //battle.resolveStage();
         //battle.resolveStage();
-        System.out.println("After the battle");
-        System.out.println();
-        list(france);
-        list(austria);*/
+        //System.out.println("After the battle");
+        //System.out.println();
+        //list(france);
+        //list(austria);
 
-        /*Battle battle = new Battle(force1, force2);
-        battle.resolve();
-        getStat(force1, force2);*/
+
         getStat(france, austria);
     }
 
