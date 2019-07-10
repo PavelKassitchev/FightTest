@@ -31,19 +31,19 @@ public class Test {
         //battle.longDistanceBombing();
 
 
-        //battle.resolve();
+        battle.resolve();
         //battle.resolveStage();
         //battle.resolveStage();
         //battle.resolveStage();
         //battle.resolveStage();
         //battle.resolveStage();
-        //System.out.println("After the battle");
-        //System.out.println();
-        //list(france);
-        //list(austria);
+        System.out.println("After the battle");
+        System.out.println();
+        list(france);
+        list(austria);
 
 
-        getStat(france, austria);
+        //getStat(france, austria);
     }
 
     public static void getStat(Force attacker, Force defender) {

@@ -11,7 +11,7 @@ public abstract class Unit extends Force {
     public static final int HEADQUATERS = 4;
 
     public static final double FIRE_ON_ARTILLERY = 0.5;
-    public static final double CHARGE_ON_ARTILLERY = 1.3;
+    public static final double CHARGE_ON_ARTILLERY = 1.25;
     public static final double CHARGE_ON_CAVALRY = 0.75;
     public static final double LACK_OF_AMMO_PENALTY = - 0.1;
     public static final double OUT_OF_AMMO_PENALTY = - 0.3;
