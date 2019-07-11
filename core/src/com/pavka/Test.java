@@ -12,13 +12,13 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Force france = createForce(FRANCE,12, 2, 4);
-        Force austria = createForce(AUSTRIA, 12, 2, 4);
+        Force france = createForce(FRANCE,3, 1, 1);
+        Force austria = createForce(AUSTRIA, 6, 1, 1);
 
-        Force f = createForce(FRANCE, 0, 11, 1);
-        Force a = createForce(AUSTRIA, 0, 10, 1);
+        Force f = createForce(FRANCE, 4, 2, 1);
+        Force a = createForce(AUSTRIA, 0, 1, 1);
 
-        france.attach(f);
+        //france.attach(f);
         austria.attach(a);
 
         france.order = new Order(true, 0.7, 0);
@@ -28,13 +28,17 @@ public class Test {
         Battle battle = new Battle(france, austria);
 
 
-        //battle.longDistanceBombing();
+        battle.longDistanceBombing();
 
 
-        battle.resolve();
-        //battle.resolveStage();
-        //battle.resolveStage();
-        //battle.resolveStage();
+        //battle.resolve();
+        battle.resolveStage();
+        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        france.attach(f);
+        battle.resolveStage();
+        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        battle.resolveStage();
+        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
         //battle.resolveStage();
         //battle.resolveStage();
         System.out.println("After the battle");

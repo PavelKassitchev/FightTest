@@ -37,6 +37,7 @@ public class Battle {
 
 
     int number;
+    int count;
 
     public Battle(Force force1, Force force2) {
 
@@ -104,7 +105,7 @@ public class Battle {
             if (random.nextBoolean()) return 0;
         }
         String s;
-        int count = 0;
+        //int count = 0;
         longDistanceBombing();
         while (winner == 0) {
             s = resolveStage();
@@ -228,6 +229,8 @@ public class Battle {
     }
 
     public int longDistanceBombing() {
+
+        System.out.println(defender.name + " bombing...");
         int casualities = 0;
         Random random = new Random();
 
@@ -301,6 +304,9 @@ public class Battle {
 
 
     public String resolveStage() {
+
+        System.out.println("Stage " + (count + 1) + ", attacker - " + attacker.name);
+        System.out.println("Attacker - " + attacker.strength + ", defender - " + defender.strength);
 
         double fireOnDefender = FIRE_ON_UNIT * defenderBonus * attacker.fire / defender.strength;
 
@@ -450,7 +456,7 @@ public class Battle {
         System.out.println("Defender: " + defender.name);
         Test.list(defender);*/
 
-
+        System.out.println("After this stage attacker - " + attacker.strength + ", defender - " + defender.strength);
         return result.toString();
     }
 
