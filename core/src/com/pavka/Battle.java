@@ -375,6 +375,7 @@ public class Battle {
                     if (unit.isSub) {
                         unit.formerSuper = unit.superForce;
                         unit.superForce.detach(unit);
+                        System.out.println("defender, unit routed: " + unit.name);
                     }
 
                     if (unit.strength <= MIN_SOLDIERS) {
@@ -419,7 +420,7 @@ public class Battle {
                     if (unit.isSub) {
                         unit.formerSuper = unit.superForce;
                         unit.superForce.detach(unit);
-
+                        System.out.println("attacker, unit routed: " + unit.name);
                     }
 
                     //unit.retreat();
