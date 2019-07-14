@@ -12,7 +12,8 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Force france = createForce(FRANCE,3, 1, 1);
+        //MAIN SECTION
+        /*Force france = createForce(FRANCE,3, 1, 1);
         Force austria = createForce(AUSTRIA, 6, 1, 1);
 
         Force f = createForce(FRANCE, 4, 2, 1);
@@ -44,9 +45,14 @@ public class Test {
         System.out.println("After the battle");
         System.out.println();
         list(france);
-        list(austria);
-
-
+        list(austria);*/
+        //END OF MAIN SECTION
+        Unit france = new Battalion(FRANCE, hex);
+        Force austria = new Force(new Battalion(AUSTRIA, hex));
+        Battle battle = new Battle(france, austria);
+        france.order = new Order(true, 0.7, 0);
+        austria.order = new Order(true, 0.7, 0);
+        battle.resolve();
         //getStat(france, austria);
     }
 
