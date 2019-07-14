@@ -48,7 +48,9 @@ public class Test {
         list(austria);*/
         //END OF MAIN SECTION
         Unit france = new Battalion(FRANCE, hex);
+        //Force france = createForce(FRANCE, 1, 0 , 0 );
         Force austria = new Force(new Battalion(AUSTRIA, hex));
+        //Force austria = createForce(AUSTRIA, 1, 0, 0);
         Battle battle = new Battle(france, austria);
         france.order = new Order(true, 0.7, 0);
         austria.order = new Order(true, 0.7, 0);
