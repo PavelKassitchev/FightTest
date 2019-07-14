@@ -39,6 +39,8 @@ public class Test {
         if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
         battle.resolveStage();
         if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        battle.resolveStage();
+        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
         //battle.resolveStage();
         //battle.resolveStage();
         System.out.println("After the battle");
