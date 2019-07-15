@@ -40,7 +40,7 @@ public class Fight {
     On march:
     Battalion length is about 200 m
     Squadron length is about 160 m
-    Battery length is about 80 m
+    Battery length is about 100 m
 
     Regiment - 600 m or a bit more
     Brigade - 1200 m or a bit more
@@ -48,6 +48,21 @@ public class Fight {
     Corps of 2 infantry and 1 cavalry divisions without wagons starts from 8 km
 
     Possible wagon train for a division - ?
+
+    Ammo:
+    Battalion - 600 Kgs per 4 hours
+    Squadron - 100 Kgs per 4 hours
+    Battery - 1600 Kgs per 4 hours
+    Division 16 hour stock - 55200 Kgs
+
+    Food:
+    Battalion - 1800 Kgs per day
+    Squadron - 1800 Kgs per day
+    Battery - 600 Kgs per day
+    Division 5 days stock - 138000Kgs
+
+    2 hours wagon - 1000 Kgs
+    100 wagons length - 700 m
 
      */
 
