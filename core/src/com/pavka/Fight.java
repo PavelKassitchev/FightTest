@@ -61,8 +61,8 @@ public class Fight {
     Battery - 600 Kgs per day
     Division 5 days stock - 138000Kgs
 
-    2 hours wagon - 1000 Kgs
-    100 wagons length - 700 m
+    2 horse wagon - 1000 Kgs
+    100 wagons length - 650 m
 
      */
 
