@@ -13,51 +13,51 @@ public class Test {
     public static void main(String[] args) {
 
         //MAIN SECTION
-        /*Force france = createForce(FRANCE,3, 1, 1);
-        Force austria = createForce(AUSTRIA, 6, 1, 1);
+        Force france = createForce(FRANCE,1, 0, 1);
+        Force austria = createForce(AUSTRIA, 0, 7, 0);
 
         Force f = createForce(FRANCE, 4, 2, 1);
         Force a = createForce(AUSTRIA, 0, 1, 1);
 
         //france.attach(f);
-        austria.attach(a);
+        //austria.attach(a);
 
         france.order = new Order(true, 0.7, 0);
-        austria.order = new Order(true, 0.7, 0);
+        austria.order = new Order(false, 0.7, 0);
 
 
         Battle battle = new Battle(france, austria);
 
 
-        battle.longDistanceBombing();
+        //battle.longDistanceBombing();
 
 
         //battle.resolve();
-        battle.resolveStage();
-        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
-        france.attach(f);
-        battle.resolveStage();
-        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
-        battle.resolveStage();
-        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
-        battle.resolveStage();
-        if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        //battle.resolveStage();
+        //if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        //france.attach(f);
+        //battle.resolveStage();
+        //if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        //battle.resolveStage();
+        //if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
+        ////battle.resolveStage();
+        //if (battle.winner != 0) System.out.println("Victory of " + battle.winner);
         //battle.resolveStage();
         //battle.resolveStage();
         System.out.println("After the battle");
         System.out.println();
         list(france);
-        list(austria);*/
+        list(austria);
         //END OF MAIN SECTION
-        Unit france = new Battalion(FRANCE, hex);
+        //Unit france = new Battalion(FRANCE, hex);
         //Force france = createForce(FRANCE, 1, 0 , 0 );
-        Force austria = new Force(new Battalion(AUSTRIA, hex));
+        //Force austria = new Force(new Battalion(AUSTRIA, hex));
         //Force austria = createForce(AUSTRIA, 1, 0, 0);
-        Battle battle = new Battle(france, austria);
-        france.order = new Order(true, 0.7, 0);
-        austria.order = new Order(true, 0.7, 0);
-        battle.resolve();
-        //getStat(france, austria);
+        //Battle battle = new Battle(france, austria);
+        //france.order = new Order(true, 0.7, 0);
+        //austria.order = new Order(true, 0.7, 0);
+        //battle.resolve();
+        getStat(france, austria);
     }
 
     public static void getStat(Force attacker, Force defender) {
