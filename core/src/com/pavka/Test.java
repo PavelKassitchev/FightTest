@@ -13,8 +13,8 @@ public class Test {
     public static void main(String[] args) {
 
         //MAIN SECTION
-        Force france = createForce(FRANCE,1, 0, 1);
-        Force austria = createForce(AUSTRIA, 0, 7, 0);
+        Force france = createForce(FRANCE,12, 2, 4);
+        Force austria = createForce(AUSTRIA, 1, 0, 0);
 
         Force f = createForce(FRANCE, 4, 2, 1);
         Force a = createForce(AUSTRIA, 0, 1, 1);
@@ -22,8 +22,8 @@ public class Test {
         //france.attach(f);
         //austria.attach(a);
 
-        france.order = new Order(true, 0.7, 0);
-        austria.order = new Order(false, 0.7, 0);
+        france.order = new Order(true, 0.3, 0);
+        austria.order = new Order(false, 0.3, 0);
 
 
         Battle battle = new Battle(france, austria);
@@ -57,7 +57,8 @@ public class Test {
         //france.order = new Order(true, 0.7, 0);
         //austria.order = new Order(true, 0.7, 0);
         //battle.resolve();
-        getStat(france, austria);
+        //getStat(france, austria);
+        getStat(france, true);
     }
 
     public static void getStat(Force attacker, Force defender) {
@@ -83,6 +84,52 @@ public class Test {
             else n++;
         }
 
+        System.out.println("Attacker wins = " + a + " Defender wins = " + d + " Without battle " + n);
+    }
+
+    static Force createDivision() {
+        Nation n = AUSTRIA;
+        Force r1 = new Force(new Battalion(n, hex), new Battalion(n, hex), new Battalion(n, hex));
+        Force r2 = new Force(new Battalion(n, hex), new Battalion(n, hex), new Battalion(n, hex));
+        Force r3 = new Force(new Battalion(n, hex), new Battalion(n, hex), new Battalion(n, hex));
+        Force r4 = new Force(new Battalion(n, hex), new Battalion(n, hex), new Battalion(n, hex));
+        Force b1 = new Force(r1, r2);
+        Force b2 = new Force(r1, r2);
+        Force cav = new Force (new Squadron(n, hex), new Squadron(n, hex));
+        Force art = new Force(new Battery(n, hex), new Battery(n, hex), new Battery(n, hex), new Battery(n, hex));
+        return new Force(b1, b2, cav, art);
+    }
+
+    static void getStat(Force france, boolean attacker) {
+        int a = 0;
+        int d = 0;
+        int n = 0;
+        for (int i = 0; i < 100; i++) {
+            Force att = createForce(FRANCE, france.battalions.size(), france.squadrons.size(), france.batteries.size(), france.morale);
+
+            Force def = createDivision();
+
+            if(attacker) {
+                att.order.seekBattle = true;
+                def.order.seekBattle = false;
+            }
+            else {
+                att.order.seekBattle = false;
+                def.order.seekBattle = true;
+            }
+
+
+            Battle battle = new Battle(att, def);
+
+            //Battle battle = new Battle(force1, force2);
+            int r = battle.resolve();
+
+            if (r == 1) a++;
+            else
+            if (r == -1) d++;
+
+            else n++;
+        }
         System.out.println("Attacker wins = " + a + " Defender wins = " + d + " Without battle " + n);
     }
 
