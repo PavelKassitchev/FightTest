@@ -14,16 +14,18 @@ public class Test {
 
         //MAIN SECTION
         Force france = createForce(FRANCE,12, 2, 4);
-        Force austria = createForce(AUSTRIA, 1, 0, 0);
+        //Force austria = createForce(AUSTRIA, 12, 2, 4);
 
+        Force austria = createDivision();
+        austria.name = "Austrian division";
         Force f = createForce(FRANCE, 4, 2, 1);
         Force a = createForce(AUSTRIA, 0, 1, 1);
 
         //france.attach(f);
         //austria.attach(a);
 
-        france.order = new Order(true, 0.3, 0);
-        austria.order = new Order(false, 0.3, 0);
+        france.order = new Order(true, 0.7, 0);
+        austria.order = new Order(false, 0.7, 0);
 
 
         Battle battle = new Battle(france, austria);
@@ -65,7 +67,7 @@ public class Test {
         int a = 0;
         int d = 0;
         int n = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             Force att = createForce(attacker.nation, attacker.battalions.size(), attacker.squadrons.size(), attacker.batteries.size(), attacker.morale);
             att.order = new Order(attacker.order.seekBattle, attacker.order.retreatLevel, 0);
             Force def = createForce(defender.nation, defender.battalions.size(), defender.squadrons.size(), defender.batteries.size(), defender.morale);
@@ -94,7 +96,7 @@ public class Test {
         Force r3 = new Force(new Battalion(n, hex), new Battalion(n, hex), new Battalion(n, hex));
         Force r4 = new Force(new Battalion(n, hex), new Battalion(n, hex), new Battalion(n, hex));
         Force b1 = new Force(r1, r2);
-        Force b2 = new Force(r1, r2);
+        Force b2 = new Force(r3, r4);
         Force cav = new Force (new Squadron(n, hex), new Squadron(n, hex));
         Force art = new Force(new Battery(n, hex), new Battery(n, hex), new Battery(n, hex), new Battery(n, hex));
         return new Force(b1, b2, cav, art);
@@ -104,11 +106,11 @@ public class Test {
         int a = 0;
         int d = 0;
         int n = 0;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             Force att = createForce(FRANCE, france.battalions.size(), france.squadrons.size(), france.batteries.size(), france.morale);
-
+            att.order.retreatLevel = 0.7;
             Force def = createDivision();
-
+            def.order.retreatLevel = 0.7;
             if(attacker) {
                 att.order.seekBattle = true;
                 def.order.seekBattle = false;
