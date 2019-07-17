@@ -64,12 +64,65 @@ public class Fight {
     2 horse wagon - 1000 Kgs
     100 wagons length - 650 m
 
+    or maybe 65 wagon train of 400 m length
+
+     */
+    /*
+    Changes in the project:
+
+    Unit and sub-classes - double maxPower and MAX_POWER added;
      */
 
 
     Array<Force> white;
     Array<Force> black;
+    Array<Unit> whiteUnits;
+    Array<Unit> blackUnits;
+
+    int whiteInitStrength;
+    int blackInitStrength;
+    double whiteInitPower;
+    double blackInitPower;
     int stage;
+
+    public Fight(Force w, Force b) {
+        white = new Array<Force>();
+        white.add(w);
+        whiteInitStrength = w.strength;
+        if (w.isUnit) {
+            Unit u = (Unit)w;
+            whiteInitPower = u.maxPower * u.strength / u.maxStrength;
+
+        }
+        else {
+            for (Unit u: w.battalions) {
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+            }
+            for (Unit u: w.squadrons) {
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+            }
+            for (Unit u: w.batteries) {
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+            }
+        }
+
+        black = new Array<Force>();
+        black.add(b);
+        blackInitStrength = b.strength;
+        //TODO
+
+    }
+
+    public Fight(Array<Force> white, Array<Force> black) {
+        this.white = white;
+        this.black = black;
+        for (Force w: white) {
+            whiteInitStrength += w.strength;
+        }
+        for (Force b: black) {
+            blackInitStrength += b.strength;
+        }
+    }
 }
 
 

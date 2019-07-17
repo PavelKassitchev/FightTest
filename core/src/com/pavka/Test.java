@@ -12,6 +12,9 @@ public class Test {
 
     public static void main(String[] args) {
 
+        //Force test = new Battalion(FRANCE, hex);
+        //System.out.println(((Unit)test).type);
+
         //MAIN SECTION
         Force france = createForce(FRANCE,12, 2, 4);
         //Force austria = createForce(AUSTRIA, 12, 2, 4);

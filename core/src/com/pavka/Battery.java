@@ -11,6 +11,7 @@ public class Battery extends Unit {
     public final static double AMMO_LIMIT = 5;
     public final  static double FIRE = 4;
     public final static double CHARGE = 0.0;
+    public final static double MAX_POWER= 3;
 
     public Battery(Nation nation, Hex hex) {
         this(nation, hex, MAX_STRENGTH);
@@ -27,6 +28,7 @@ public class Battery extends Unit {
         maxStrength = MAX_STRENGTH;
         maxFire = FIRE;
         maxCharge = CHARGE;
+        maxPower = MAX_POWER;
         this.strength = strength;
         speed = SPEED;
         foodNeed = FOOD_NEED * strength / maxStrength;

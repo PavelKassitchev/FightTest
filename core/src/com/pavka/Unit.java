@@ -23,6 +23,7 @@ public abstract class Unit extends Force {
     double imprisoned;
     double isolatedUnitPenalty;
     boolean isDisordered;
+    double maxPower;
 
     public Unit(Nation nation, Hex hex) {
 

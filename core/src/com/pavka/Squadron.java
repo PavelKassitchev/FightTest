@@ -11,6 +11,7 @@ public class Squadron extends Unit {
     public final static double AMMO_LIMIT = 2.4;
     public final static double FIRE = 0.1;
     public final static double CHARGE = 2.4;
+    public final static double MAX_POWER = 1;
 
     public Squadron(Nation nation, Hex hex) {
         this(nation, hex, MAX_STRENGTH);
@@ -28,6 +29,7 @@ public class Squadron extends Unit {
         maxStrength = MAX_STRENGTH;
         maxFire = FIRE;
         maxCharge = CHARGE;
+        maxPower = MAX_POWER;
         this.strength = strength;
         speed = SPEED;
         foodNeed = FOOD_NEED * strength / maxStrength;

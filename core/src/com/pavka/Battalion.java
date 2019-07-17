@@ -10,6 +10,7 @@ public class Battalion extends Unit {
     public final static double AMMO_LIMIT = 4;
     public final static double FIRE = 1;
     public final static double CHARGE = 1;
+    public final static double MAX_POWER = 3;
 
     public Battalion (Nation nation, Hex hex) {
         this(nation, hex, MAX_STRENGTH);
@@ -27,6 +28,7 @@ public class Battalion extends Unit {
         maxStrength = MAX_STRENGTH;
         maxFire = FIRE;
         maxCharge = CHARGE;
+        maxPower = MAX_POWER;
         this.strength = strength;
         speed = SPEED;
         foodNeed = FOOD_NEED * strength / maxStrength;
