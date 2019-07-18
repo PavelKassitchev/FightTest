@@ -3,10 +3,7 @@ package com.pavka;
 import com.badlogic.gdx.utils.Array;
 import com.pavka.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 
 public class Fight {
@@ -74,8 +71,8 @@ public class Fight {
      */
 
 
-    Array<Force> white;
-    Array<Force> black;
+    HashMap<Force, Integer> white;
+    HashMap<Force, Integer> black;
     Array<Unit> whiteUnits;
     Array<Unit> blackUnits;
 
@@ -86,8 +83,8 @@ public class Fight {
     int stage;
 
     public Fight(Force w, Force b) {
-        white = new Array<Force>();
-        white.add(w);
+        white = new HashMap<Force, Integer>();
+        white.put(w, w.strength);
         whiteInitStrength = w.strength;
         if (w.isUnit) {
             Unit u = (Unit)w;
@@ -106,22 +103,30 @@ public class Fight {
             }
         }
 
-        black = new Array<Force>();
-        black.add(b);
+        black = new HashMap<Force, Integer>();
+        black.put(b, b.strength);
         blackInitStrength = b.strength;
-        //TODO
+        if (b.isUnit) {
+            Unit u = (Unit)b;
+            whiteInitPower = u.maxPower * u.strength / u.maxStrength;
+
+        }
+        else {
+            for (Unit u: b.battalions) {
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+            }
+            for (Unit u: b.squadrons) {
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+            }
+            for (Unit u: b.batteries) {
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+            }
+        }
 
     }
 
     public Fight(Array<Force> white, Array<Force> black) {
-        this.white = white;
-        this.black = black;
-        for (Force w: white) {
-            whiteInitStrength += w.strength;
-        }
-        for (Force b: black) {
-            blackInitStrength += b.strength;
-        }
+
     }
 }
 

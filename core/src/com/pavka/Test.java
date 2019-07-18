@@ -16,10 +16,10 @@ public class Test {
         //System.out.println(((Unit)test).type);
 
         //MAIN SECTION
-        Force france = createForce(FRANCE,12, 2, 4);
-        //Force austria = createForce(AUSTRIA, 12, 2, 4);
+        Force france = createForce(FRANCE,0, 9, 0);
+        Force austria = createForce(AUSTRIA, 2, 0, 1);
 
-        Force austria = createDivision();
+        //Force austria = createDivision();
         austria.name = "Austrian division";
         Force f = createForce(FRANCE, 4, 2, 1);
         Force a = createForce(AUSTRIA, 0, 1, 1);
@@ -62,15 +62,15 @@ public class Test {
         //france.order = new Order(true, 0.7, 0);
         //austria.order = new Order(true, 0.7, 0);
         //battle.resolve();
-        //getStat(france, austria);
-        getStat(france, true);
+        getStat(france, austria);
+        //getStat(france, true);
     }
 
     public static void getStat(Force attacker, Force defender) {
         int a = 0;
         int d = 0;
         int n = 0;
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             Force att = createForce(attacker.nation, attacker.battalions.size(), attacker.squadrons.size(), attacker.batteries.size(), attacker.morale);
             att.order = new Order(attacker.order.seekBattle, attacker.order.retreatLevel, 0);
             Force def = createForce(defender.nation, defender.battalions.size(), defender.squadrons.size(), defender.batteries.size(), defender.morale);
