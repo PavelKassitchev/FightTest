@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 
+import static com.pavka.Nation.WHITE;
+
 public class Hex extends Image {
     //public static TiledMapTileLayer layer = (TiledMapTileLayer) (Play.map).getLayers().get("TileLayer");
     public int col;
@@ -18,7 +20,8 @@ public class Hex extends Image {
     public double currentHarvest;
     public int index;
     public TiledMapTileLayer.Cell cell;
-    public Array<Force> forces;
+    public Array<Force> whiteForces;
+    public Array<Force> blackForces;
     public final static int SIZE = 10;
 
 
@@ -26,17 +29,37 @@ public class Hex extends Image {
 
 
     public Hex() {
-        forces = new Array<Force>();
+        blackForces = new Array<Force>();
+        whiteForces = new Array<Force>();
     }
     public Hex(int q, int r) {
 
         col = q;
         row = r;
         //cell = layer.getCell(col, row);
-        forces = new Array<Force>();
+        blackForces = new Array<Force>();
+        whiteForces = new Array<Force>();
         setBounds(getRelX() - 8, getRelY() - 8, 16, 16);
         currentHarvest = maxHarvest;
 
+    }
+
+    public void locate(Force force) {
+        if (force.nation.color == WHITE) {
+            whiteForces.add(force);
+        }
+        else {
+            blackForces.add(force);
+        }
+    }
+
+    public void eliminate(Force force) {
+        if (force.nation.color == WHITE) {
+            whiteForces.removeValue(force, true);
+        }
+        else {
+            blackForces.removeValue(force, true);
+        }
     }
 
     /*@Override

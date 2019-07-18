@@ -7,11 +7,16 @@ public enum Nation {
     PRUSSIA,
     RUSSIA;
 
+    public static final int BLACK = -1;
+    public static final int WHITE = 1;
     private float nationalMorale;
+    public int color;
     static
     {
         FRANCE.nationalMorale = 1;
+        FRANCE.color = WHITE;
         AUSTRIA.nationalMorale = 1;
+        AUSTRIA.color = BLACK;
     }
 
     public float getNationalMorale() {

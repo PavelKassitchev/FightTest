@@ -16,7 +16,9 @@ public class Control extends Table {
 
     public Control(Hex hex) {
         this.hex = hex;
-        this.forces = hex.forces;
+        this.forces = new Array<Force>();
+        forces.addAll(hex.whiteForces);
+        forces.addAll(hex.blackForces);
         BitmapFont font = new BitmapFont();
         font.getData().setScale(0.7f);
         Label costLabel = new Label("Cost: " + hex.cell.getTile().getProperties().get("cost"), new Label.LabelStyle(font, new Color(1, 0, 0, 1)));

@@ -1,9 +1,8 @@
 package com.pavka;
 
 import com.badlogic.gdx.utils.Array;
-import com.pavka.*;
 
-import java.util.*;
+import java.util.HashMap;
 
 
 public class Fight {
@@ -68,6 +67,10 @@ public class Fight {
     Changes in the project:
 
     Unit and sub-classes - double maxPower and MAX_POWER added;
+    Nation color added
+    whiteForces and blackForces in Hex, method locate(force) and method eliminate(force) added
+    class Control: in Constructor forces are new Array addAll whites and blacks instead of this.forces = hex.forces
+    methods hex.locate and hex.eliminate are used in Force class instead of hex.forces.add and hex.forces.removeValue
      */
 
 
@@ -82,52 +85,53 @@ public class Fight {
     double blackInitPower;
     int stage;
 
-    public Fight(Force w, Force b) {
+    public Fight(Hex hex) {
         white = new HashMap<Force, Integer>();
-        white.put(w, w.strength);
-        whiteInitStrength = w.strength;
-        if (w.isUnit) {
-            Unit u = (Unit)w;
-            whiteInitPower = u.maxPower * u.strength / u.maxStrength;
-
-        }
-        else {
-            for (Unit u: w.battalions) {
-                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-            }
-            for (Unit u: w.squadrons) {
-                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-            }
-            for (Unit u: w.batteries) {
-                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-            }
-        }
-
         black = new HashMap<Force, Integer>();
-        black.put(b, b.strength);
-        blackInitStrength = b.strength;
-        if (b.isUnit) {
-            Unit u = (Unit)b;
-            whiteInitPower = u.maxPower * u.strength / u.maxStrength;
+        for (Force w : hex.whiteForces) {
+            whiteInitStrength += w.strength;
+            white.put(w, w.strength);
+            if (w.isUnit) {
+                Unit u = (Unit) w;
+                whiteInitPower = u.maxPower * u.strength / u.maxStrength;
+
+            } else {
+                for (Unit u : w.battalions) {
+                    whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+                }
+                for (Unit u : w.squadrons) {
+                    whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+                }
+                for (Unit u : w.batteries) {
+                    whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+                }
+            }
+        }
+
+        for (Force b : hex.blackForces) {
+            blackInitStrength += b.strength;
+            black.put(b, b.strength);
+            if (b.isUnit) {
+                Unit u = (Unit) b;
+                blackInitPower = u.maxPower * u.strength / u.maxStrength;
+
+            } else {
+                for (Unit u : b.battalions) {
+                    blackInitPower += u.maxPower * u.strength / u.maxStrength;
+                }
+                for (Unit u : b.squadrons) {
+                    blackInitPower += u.maxPower * u.strength / u.maxStrength;
+                }
+                for (Unit u : b.batteries) {
+                    blackInitPower += u.maxPower * u.strength / u.maxStrength;
+                }
+            }
+
 
         }
-        else {
-            for (Unit u: b.battalions) {
-                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-            }
-            for (Unit u: b.squadrons) {
-                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-            }
-            for (Unit u: b.batteries) {
-                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-            }
-        }
-
     }
 
-    public Fight(Array<Force> white, Array<Force> black) {
 
-    }
 }
 
 
