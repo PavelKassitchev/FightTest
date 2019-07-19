@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 
+import static com.pavka.Nation.BLACK;
 import static com.pavka.Nation.WHITE;
 
 public class Hex extends Image {
@@ -23,6 +24,7 @@ public class Hex extends Image {
     public Array<Force> whiteForces;
     public Array<Force> blackForces;
     public final static int SIZE = 10;
+    public Fight fight;
 
 
     //static Texture texture = new Texture("symbols/Blue.png");
@@ -60,6 +62,16 @@ public class Hex extends Image {
         else {
             blackForces.removeValue(force, true);
         }
+    }
+
+    public boolean containsEnemy(Force force) {
+        if (force.nation.color == WHITE && !blackForces.isEmpty()) return true;
+        if (force.nation.color == BLACK && !whiteForces.isEmpty()) return true;
+        return false;
+    }
+
+    public void startFight() {
+        fight = new Fight(this);
     }
 
     /*@Override

@@ -156,6 +156,12 @@ public class Force extends Image {
 
     }
 
+    public int surrender() {
+        int prisoners = strength;
+        disappear();
+        return prisoners;
+    }
+
     public void setRetreatDirection(Force enemy) {
         if (enemy.getForwardHex() != null) {
             order.retreatDirection = hex.getDirection(enemy.getForwardHex());
@@ -169,6 +175,10 @@ public class Force extends Image {
             order.retreatDirection = Direction.getRandom();
 
         }
+
+    }
+
+    public void setRetreatDirection(Array<Force> enemies) {
 
     }
 

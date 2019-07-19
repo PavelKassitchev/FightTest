@@ -19,6 +19,8 @@ public class Fight {
     public static final double SMALL_VICTORY_BONUS = 0.2;
     public static final double LONG_DISTANCE_FIRE = 0.65;
 
+    private Hex hex;
+
     /* Section for the update comments, new and revised methods,etc.
 
     Battle abilities:
@@ -71,6 +73,9 @@ public class Fight {
     whiteForces and blackForces in Hex, method locate(force) and method eliminate(force) added
     class Control: in Constructor forces are new Array addAll whites and blacks instead of this.forces = hex.forces
     methods hex.locate and hex.eliminate are used in Force class instead of hex.forces.add and hex.forces.removeValue
+    class Hex, method containsEnemy added
+    class Force setRetreatDirection from many enemies(?), method surrender added
+    local variable Fight fight and method startFight are added to Hex class
      */
 
 
@@ -85,7 +90,8 @@ public class Fight {
     double blackInitPower;
     int stage;
 
-    public Fight(Hex hex) {
+    public Fight(Hex h) {
+        hex = h;
         white = new HashMap<Force, Integer>();
         black = new HashMap<Force, Integer>();
         for (Force w : hex.whiteForces) {
