@@ -73,7 +73,7 @@ public class Fight {
     whiteForces and blackForces in Hex, method locate(force) and method eliminate(force) added
     class Control: in Constructor forces are new Array addAll whites and blacks instead of this.forces = hex.forces
     methods hex.locate and hex.eliminate are used in Force class instead of hex.forces.add and hex.forces.removeValue
-    class Hex, method containsEnemy added
+    class Hex, method containsEnemy added, empty methods getFireFactor, getChargeFactor, getDefenseFactor added
     class Force setRetreatDirection from many enemies(?), method surrender added
     local variable Fight fight and method startFight are added to Hex class
      */
@@ -88,6 +88,10 @@ public class Fight {
     int blackInitStrength;
     double whiteInitPower;
     double blackInitPower;
+    double whiteFire;
+    double whiteCharge;
+    double blackFire;
+    double blackCharge;
     int stage;
 
     public Fight(Hex h) {

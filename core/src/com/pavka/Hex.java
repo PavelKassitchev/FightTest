@@ -74,6 +74,19 @@ public class Hex extends Image {
         fight = new Fight(this);
     }
 
+    public double getFireFactor(Unit unit) {
+        //TODO
+        return 1;
+    }
+    public double getChargeFactor(Unit unit) {
+        //TODO
+        return 1;
+    }
+    public double getDefenseFactor(Unit unit) {
+        //TODO
+        return 1;
+    }
+
     /*@Override
     public void draw(Batch batch, float alpha) {
         batch.draw(texture, getRelX(), getRelY());
