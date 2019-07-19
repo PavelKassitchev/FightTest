@@ -104,16 +104,24 @@ public class Fight {
             if (w.isUnit) {
                 Unit u = (Unit) w;
                 whiteInitPower = u.maxPower * u.strength / u.maxStrength;
+                whiteFire += u.fire * hex.getFireFactor(u);
+                whiteCharge += u.charge * hex.getChargeFactor(u);
 
             } else {
                 for (Unit u : w.battalions) {
                     whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+                    whiteFire += u.fire * hex.getFireFactor(u);
+                    whiteCharge += u.charge * hex.getChargeFactor(u);
                 }
                 for (Unit u : w.squadrons) {
                     whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+                    whiteFire += u.fire * hex.getFireFactor(u);
+                    whiteCharge += u.charge * hex.getChargeFactor(u);
                 }
                 for (Unit u : w.batteries) {
                     whiteInitPower += u.maxPower * u.strength / u.maxStrength;
+                    whiteFire += u.fire * hex.getFireFactor(u);
+                    whiteCharge += u.charge * hex.getChargeFactor(u);
                 }
             }
         }
@@ -124,16 +132,24 @@ public class Fight {
             if (b.isUnit) {
                 Unit u = (Unit) b;
                 blackInitPower = u.maxPower * u.strength / u.maxStrength;
+                blackFire += u.fire * hex.getFireFactor(u);
+                blackCharge += u.charge * hex.getChargeFactor(u);
 
             } else {
                 for (Unit u : b.battalions) {
                     blackInitPower += u.maxPower * u.strength / u.maxStrength;
+                    blackFire += u.fire * hex.getFireFactor(u);
+                    blackCharge += u.charge * hex.getChargeFactor(u);
                 }
                 for (Unit u : b.squadrons) {
                     blackInitPower += u.maxPower * u.strength / u.maxStrength;
+                    blackFire += u.fire * hex.getFireFactor(u);
+                    blackCharge += u.charge * hex.getChargeFactor(u);
                 }
                 for (Unit u : b.batteries) {
                     blackInitPower += u.maxPower * u.strength / u.maxStrength;
+                    blackFire += u.fire * hex.getFireFactor(u);
+                    blackCharge += u.charge * hex.getChargeFactor(u);
                 }
             }
 

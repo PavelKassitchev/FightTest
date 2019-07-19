@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import static com.pavka.Nation.BLACK;
 import static com.pavka.Nation.WHITE;
+import static com.pavka.Unit.*;
 
 public class Hex extends Image {
     //public static TiledMapTileLayer layer = (TiledMapTileLayer) (Play.map).getLayers().get("TileLayer");
@@ -75,7 +76,11 @@ public class Hex extends Image {
     }
 
     public double getFireFactor(Unit unit) {
-        //TODO
+        switch(unit.type) {
+            case INFANTRY:
+
+            //TODO
+        }
         return 1;
     }
     public double getChargeFactor(Unit unit) {
