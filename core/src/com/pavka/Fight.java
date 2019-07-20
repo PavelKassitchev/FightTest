@@ -178,6 +178,7 @@ public class Fight {
         }
     }
     public int resolveStage() {
+        System.out.println("START STAGE " + ++stage);
         double fireOnBlack = FIRE_ON_UNIT * whiteFire / blackStrength;
 
         double fireOnWhite = FIRE_ON_UNIT * blackFire / whiteStrength;
