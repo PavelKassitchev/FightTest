@@ -17,7 +17,7 @@ public class Test {
 
         //MAIN SECTION
         Force france = createForce(FRANCE,0, 9, 0);
-        Force austria = createForce(AUSTRIA, 2, 0, 1);
+        Force austria = createForce(AUSTRIA, 3, 0, 0);
 
         //Force austria = createDivision();
         austria.name = "Austrian division";

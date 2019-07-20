@@ -87,7 +87,11 @@ public class Hex extends Image {
         //TODO
         return 1;
     }
-    public double getDefenseFactor(Unit unit) {
+    public double getFireDefenseFactor(Unit unit) {
+        //TODO
+        return 1;
+    }
+    public double getChargeDefenseFactor(Unit unit) {
         //TODO
         return 1;
     }
