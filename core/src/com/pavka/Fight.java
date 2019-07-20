@@ -177,50 +177,56 @@ public class Fight {
 
         }
     }
+
     public int resolveStage() {
         System.out.println("START STAGE " + ++stage);
-        double fireOnBlack = FIRE_ON_UNIT * whiteFire / blackStrength;
+        if (whiteStrength == 0 || blackStrength == 0) System.out.println("NO ENEMIES!");
+        else {
+            double fireOnBlack = FIRE_ON_UNIT * whiteFire / blackStrength;
 
-        double fireOnWhite = FIRE_ON_UNIT * blackFire / whiteStrength;
+            double fireOnWhite = FIRE_ON_UNIT * blackFire / whiteStrength;
 
-        double chargeOnBlack = -(CASUALITY_INTO_MORALE * fireOnBlack + CHARGE_ON_ENEMY * whiteCharge / blackStrength);
+            double chargeOnBlack = -(CASUALITY_INTO_MORALE * fireOnBlack + CHARGE_ON_ENEMY * whiteCharge / blackStrength);
 
-        double chargeOnWhite = -(CASUALITY_INTO_MORALE * fireOnWhite + CHARGE_ON_ENEMY * blackCharge / whiteStrength);
+            double chargeOnWhite = -(CASUALITY_INTO_MORALE * fireOnWhite + CHARGE_ON_ENEMY * blackCharge / whiteStrength);
 
 
-        for (Unit u: whiteUnits) {
-            u.fire(1);
-            double ratio = u.strength / whiteStrength;
-            double randomFactor = 0.7 + 0.6 * random.nextDouble();
-            whiteCasualties += hitUnit(u, randomFactor * fireOnWhite, randomFactor * chargeOnWhite);
+            for (Unit u : whiteUnits) {
+                u.fire(1);
+                double ratio = u.strength / whiteStrength;
+                double randomFactor = 0.7 + 0.6 * random.nextDouble();
+                whiteCasualties += hitUnit(u, randomFactor * fireOnWhite, randomFactor * chargeOnWhite);
+            }
+            for (Unit u : blackUnits) {
+                u.fire(1);
+                double ratio = u.strength / blackStrength;
+                double randomFactor = 0.7 + 0.6 * random.nextDouble();
+                blackCasualties += hitUnit(u, randomFactor * fireOnBlack, randomFactor * chargeOnBlack);
+            }
+            whiteStrength = 0;
+            double whiteAmmo = 0;
+            for (Force w : hex.whiteForces) {
+                whiteStrength += w.strength;
+                whiteAmmo += w.ammoStock;
+            }
+            blackStrength = 0;
+            double blackAmmo = 0;
+            for (Force b : hex.blackForces) {
+                blackStrength += b.strength;
+                blackAmmo += b.ammoStock;
+            }
+
+            System.out.println("WHITE: strength - " + whiteStrength + " casualties - " + whiteCasualties + " ammo stock - " + whiteAmmo);
+            for (Force f : hex.whiteForces) System.out.println("Morale - " + f.morale);
+            System.out.println("BLACK: strength - " + blackStrength + " casualties - " + blackCasualties + " ammo stock - " + blackAmmo);
+            for (Force f : hex.blackForces) System.out.println("Morale - " + f.morale);
+
+            if (winner != 0) System.out.println("WINNER = " + winner);
         }
-        for (Unit u: blackUnits) {
-            u.fire(1);
-            double ratio = u.strength / blackStrength;
-            double randomFactor = 0.7 + 0.6 * random.nextDouble();
-            blackCasualties += hitUnit(u, randomFactor * fireOnBlack, randomFactor * chargeOnBlack);
-        }
-        whiteStrength = 0;
-        double whiteAmmo = 0;
-        for (Force w: hex.whiteForces) {
-            whiteStrength += w.strength;
-            whiteAmmo += w.ammoStock;
-        }
-        blackStrength = 0;
-        double blackAmmo = 0;
-        for (Force b: hex.blackForces) {
-            blackStrength += b.strength;
-            blackAmmo += b.ammoStock;
-        }
-
-        System.out.println("WHITE: strength - " + whiteStrength + " casualties - " + whiteCasualties + " ammo stock - " + whiteAmmo);
-        for(Force f: hex.whiteForces) System.out.println("Morale - " + f.morale);
-        System.out.println("BLACK: strength - " + blackStrength + " casualties - " + blackCasualties + " ammo stock - " + blackAmmo);
-        for(Force f: hex.blackForces) System.out.println("Morale - " + f.morale);
-
-        if (winner != 0) System.out.println("WINNER = " + winner);
         return winner;
+
     }
+
     public int hitUnit(Unit unit, double fire, double charge) {
         int in = unit.strength;
         //double enemyFire = (unit.nation.color == BLACK) ? whiteFire : blackFire;
@@ -254,7 +260,6 @@ public class Fight {
         return in - out;
 
     }
-
 
 
 }

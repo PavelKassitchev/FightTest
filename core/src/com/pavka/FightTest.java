@@ -36,7 +36,7 @@ public class FightTest {
             fight.resolveStage();
             //fight.resolveStage();
             if(f.morale > a.morale) w++;
-            else b++;
+            else if (f.morale < a.morale) b++;
         }
         System.out.println("Whites - " + w + " Blacks - " + b);
     }
