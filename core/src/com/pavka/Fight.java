@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import static com.pavka.Nation.WHITE;
+
 
 public class Fight {
     public static final int FIRE_ON_UNIT = 40;
@@ -113,120 +115,112 @@ public class Fight {
         black = new HashMap<Force, Integer>();
         for (Force w : hex.whiteForces) {
             whiteInitStrength += w.strength;
-            white.put(w, w.strength);
-            whiteStrength = whiteInitStrength;
             if (w.isUnit) {
                 Unit u = (Unit) w;
-                whiteInitPower = u.maxPower * u.strength / u.maxStrength;
-                whiteFire += u.fire * hex.getFireFactor(u);
-                whiteCharge += u.charge * hex.getChargeFactor(u);
-                whiteUnits.add(u);
+                whiteInitPower += u.maxPower * u.strength / u.maxStrength;
 
             } else {
                 for (Unit u : w.battalions) {
                     whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-                    whiteFire += u.fire * hex.getFireFactor(u);
-                    whiteCharge += u.charge * hex.getChargeFactor(u);
-                    whiteUnits.add(u);
                 }
                 for (Unit u : w.squadrons) {
                     whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-                    whiteFire += u.fire * hex.getFireFactor(u);
-                    whiteCharge += u.charge * hex.getChargeFactor(u);
-                    whiteUnits.add(u);
                 }
                 for (Unit u : w.batteries) {
                     whiteInitPower += u.maxPower * u.strength / u.maxStrength;
-                    whiteFire += u.fire * hex.getFireFactor(u);
-                    whiteCharge += u.charge * hex.getChargeFactor(u);
-                    whiteUnits.add(u);
                 }
             }
         }
 
         for (Force b : hex.blackForces) {
             blackInitStrength += b.strength;
-            black.put(b, b.strength);
-            blackStrength = blackInitStrength;
             if (b.isUnit) {
                 Unit u = (Unit) b;
                 blackInitPower = u.maxPower * u.strength / u.maxStrength;
-                blackFire += u.fire * hex.getFireFactor(u);
-                blackCharge += u.charge * hex.getChargeFactor(u);
-                blackUnits.add(u);
 
             } else {
                 for (Unit u : b.battalions) {
                     blackInitPower += u.maxPower * u.strength / u.maxStrength;
-                    blackFire += u.fire * hex.getFireFactor(u);
-                    blackCharge += u.charge * hex.getChargeFactor(u);
-                    blackUnits.add(u);
                 }
                 for (Unit u : b.squadrons) {
                     blackInitPower += u.maxPower * u.strength / u.maxStrength;
-                    blackFire += u.fire * hex.getFireFactor(u);
-                    blackCharge += u.charge * hex.getChargeFactor(u);
-                    blackUnits.add(u);
                 }
                 for (Unit u : b.batteries) {
                     blackInitPower += u.maxPower * u.strength / u.maxStrength;
-                    blackFire += u.fire * hex.getFireFactor(u);
-                    blackCharge += u.charge * hex.getChargeFactor(u);
-                    blackUnits.add(u);
                 }
             }
-
 
         }
     }
 
     public void init() {
-        if (blackInitStrength >= whiteInitStrength || blackInitPower >= whiteInitPower) {
-            System.out.println("SURRENDER!");
-            for (Force f: white.keySet()) {
-                System.out.println("???" + f.strength);
-                if (f.morale < 0) {
-                    System.out.println("Yes, surrender");
-                    if (f.isUnit) {
-                        whiteUnits.removeValue((Unit)f, true);
+        boolean blackAdvantage = blackInitStrength > whiteInitStrength || blackInitPower > whiteInitPower;
+        for (Force f: hex.whiteForces) {
+            if (blackAdvantage && f.morale < 0){
+                whiteImprisoned += f.strength;
+                f.surrender();
+            }
+            else {
+                white.put(f, f.strength);
+                whiteStrength += f.strength;
+                if (f.isUnit) {
+                    Unit u = (Unit)f;
+                    addUnitToFight(u);
+                }
+                else {
+                    for (Unit u : f.battalions) {
+                        addUnitToFight(u);
                     }
-                    else {
-                        for (Unit u: f.battalions) {
-                            whiteUnits.removeValue(u, true);
-                        }
-                        for (Unit u: f.squadrons) {
-                            whiteUnits.removeValue(u, true);
-                        }
-                        for (Unit u: f.batteries){
-                            whiteUnits.removeValue(u, true);
-                        }
+                    for (Unit u : f.squadrons) {
+                        addUnitToFight(u);
                     }
-                    whiteStrength -= f.strength;
-                    whiteImprisoned += f.surrender();
+                    for (Unit u : f.batteries) {
+                        addUnitToFight(u);
+                    }
+
                 }
             }
+
         }
-        if (whiteInitStrength >= blackInitStrength || whiteInitPower >= blackInitPower) {
-            for (Force f: black.keySet()) {
-                if (f.morale < 0) {
-                    if (f.isUnit) {
-                        blackUnits.removeValue((Unit)f, true);
+        for (Force f: hex.blackForces) {
+            if (!blackAdvantage && f.morale < 0){
+                blackImprisoned += f.strength;
+                f.surrender();
+            }
+            else {
+                black.put(f, f.strength);
+                blackStrength += f.strength;
+                if (f.isUnit) {
+                    Unit u = (Unit)f;
+                    addUnitToFight(u);
+                }
+                else {
+                    for (Unit u : f.battalions) {
+                        addUnitToFight(u);
                     }
-                    else {
-                        for (Unit u: f.battalions) {
-                            blackUnits.removeValue(u, true);
-                        }
-                        for (Unit u: f.squadrons) {
-                            blackUnits.removeValue(u, true);
-                        }
-                        for (Unit u: f.batteries){
-                            blackUnits.removeValue(u, true);
-                        }
+                    for (Unit u : f.squadrons) {
+                        addUnitToFight(u);
                     }
-                    blackStrength -= f.strength;
-                    blackImprisoned += f.surrender();
+                    for (Unit u : f.batteries) {
+                        addUnitToFight(u);
+                    }
+
                 }
             }
+
+        }
+
+    }
+    private void addUnitToFight(Unit u) {
+        if (u.nation.color == WHITE){
+            whiteFire += u.fire * hex.getFireFactor(u);
+            whiteCharge += u.charge * hex.getChargeFactor(u);
+            whiteUnits.add(u);
+        }
+        else {
+            blackFire += u.fire * hex.getFireFactor(u);
+            blackCharge += u.charge * hex.getChargeFactor(u);
+            blackUnits.add(u);
         }
     }
 
