@@ -71,8 +71,10 @@ public class Hex extends Image {
         return false;
     }
 
-    public void startFight() {
+    public Fight startFight() {
+
         fight = new Fight(this);
+        return fight;
     }
 
     public double getFireFactor(Unit unit) {

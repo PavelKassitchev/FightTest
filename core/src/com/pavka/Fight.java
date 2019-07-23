@@ -94,6 +94,8 @@ public class Fight {
     int blackStrength;
     int whiteCasualties;
     int blackCasualties;
+    int whiteImprisoned;
+    int blackImprisoned;
     double whiteFire;
     double whiteCharge;
     double blackFire;
@@ -178,6 +180,56 @@ public class Fight {
         }
     }
 
+    public void init() {
+        if (blackInitStrength >= whiteInitStrength || blackInitPower >= whiteInitPower) {
+            System.out.println("SURRENDER!");
+            for (Force f: white.keySet()) {
+                System.out.println("???");
+                if (f.morale < 0) {
+                    System.out.println("Yes, surrender");
+                    if (f.isUnit) {
+                        whiteUnits.removeValue((Unit)f, true);
+                    }
+                    else {
+                        for (Unit u: f.battalions) {
+                            whiteUnits.removeValue(u, true);
+                        }
+                        for (Unit u: f.squadrons) {
+                            whiteUnits.removeValue(u, true);
+                        }
+                        for (Unit u: f.batteries){
+                            whiteUnits.removeValue(u, true);
+                        }
+                    }
+                    whiteStrength -= f.strength;
+                    whiteImprisoned += f.surrender();
+                }
+            }
+        }
+        if (whiteInitStrength >= blackInitStrength || whiteInitPower >= blackInitPower) {
+            for (Force f: black.keySet()) {
+                if (f.morale < 0) {
+                    if (f.isUnit) {
+                        blackUnits.removeValue((Unit)f, true);
+                    }
+                    else {
+                        for (Unit u: f.battalions) {
+                            blackUnits.removeValue(u, true);
+                        }
+                        for (Unit u: f.squadrons) {
+                            blackUnits.removeValue(u, true);
+                        }
+                        for (Unit u: f.batteries){
+                            blackUnits.removeValue(u, true);
+                        }
+                    }
+                    blackStrength -= f.strength;
+                    blackImprisoned += f.surrender();
+                }
+            }
+        }
+    }
+
     public int resolveStage() {
         System.out.println("START STAGE " + ++stage);
         if (whiteStrength == 0 || blackStrength == 0) System.out.println("NO ENEMIES!");
@@ -216,9 +268,11 @@ public class Fight {
                 blackAmmo += b.ammoStock;
             }
 
-            System.out.println("WHITE: strength - " + whiteStrength + " casualties - " + whiteCasualties + " ammo stock - " + whiteAmmo);
+            System.out.println("WHITE: strength - " + whiteStrength + " casualties - " + whiteCasualties +
+                    " imprisoned - " + whiteImprisoned + " ammo stock - " + whiteAmmo);
             for (Force f : hex.whiteForces) System.out.println("Morale - " + f.morale);
-            System.out.println("BLACK: strength - " + blackStrength + " casualties - " + blackCasualties + " ammo stock - " + blackAmmo);
+            System.out.println("BLACK: strength - " + blackStrength + " casualties - " + blackCasualties +
+                    " imprisoned - " + blackImprisoned + " ammo stock - " + blackAmmo);
             for (Force f : hex.blackForces) System.out.println("Morale - " + f.morale);
 
             if (winner != 0) System.out.println("WINNER = " + winner);
@@ -229,34 +283,12 @@ public class Fight {
 
     public int hitUnit(Unit unit, double fire, double charge) {
         int in = unit.strength;
-        //double enemyFire = (unit.nation.color == BLACK) ? whiteFire : blackFire;
-        //double enemyCharge = (unit.nation.color == BLACK) ? whiteCharge : blackCharge;
-        //Force opponent = (unit.nation == attacker.nation) ? defender : attacker;
-        //HashSet<Unit> disordered = (unit.nation == attacker.nation) ? disorderedAtt : disorderedDef;
 
         unit.bearLoss(fire);
         int out = unit.strength;
         unit.changeMorale(charge);
 
-        /*if (unit.strength <= MIN_SOLDIERS || unit.morale <= MIN_MORALE) {
-            //unit.name = "Unit No." + (++number) + " " + unit.nation;
-            unit.isDisordered = true;
-            disordered.add(unit);
-            opponent.selectRandomUnit().changeMorale(MORALE_BONUS);
 
-            if (unit.isSub) {
-                for (Force force : unit.superForce.forces) {
-                    if (force.isUnit && force != unit) {
-                        ((Unit) force).changeMorale(MORALE_PENALTY);
-                        if (force.morale <= MIN_MORALE) {
-                            disordered.add((Unit) force);
-                            ((Unit)force).isDisordered = true;
-                        }
-                        opponent.selectRandomUnit().changeMorale(SMALL_MORALE_BONUS);
-                    }
-                }
-            }
-        }*/
         return in - out;
 
     }

@@ -17,6 +17,8 @@ public class FightTest {
 
     private static void herac(int i) {
         Fight fight = new Fight(hex);
+        //Fight fight = hex.startFight();
+        fight.init();
         for (int k = 0; k < i; k++) {
             fight.resolveStage();
         }
@@ -30,8 +32,14 @@ public class FightTest {
             f.attach(new Squadron(FRANCE, h));
             f.attach(new Squadron(FRANCE, h));
 
+            Force f1 = new Squadron(FRANCE, hex);
+            f1.strength = 60;
+            f1.morale = -0.1;
+
             Force a = new Battalion(AUSTRIA, h);
             Fight fight = new Fight(h);
+            //Fight fight = hex.startFight();
+            fight.init();
             fight.resolveStage();
             fight.resolveStage();
             //fight.resolveStage();
