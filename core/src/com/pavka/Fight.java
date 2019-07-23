@@ -184,7 +184,7 @@ public class Fight {
         if (blackInitStrength >= whiteInitStrength || blackInitPower >= whiteInitPower) {
             System.out.println("SURRENDER!");
             for (Force f: white.keySet()) {
-                System.out.println("???");
+                System.out.println("???" + f.strength);
                 if (f.morale < 0) {
                     System.out.println("Yes, surrender");
                     if (f.isUnit) {

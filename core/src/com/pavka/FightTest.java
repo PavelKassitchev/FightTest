@@ -34,7 +34,7 @@ public class FightTest {
 
             Force f1 = new Squadron(FRANCE, hex);
             f1.strength = 60;
-            f1.morale = -0.1;
+            f1.morale = 0.1;
 
             Force a = new Battalion(AUSTRIA, h);
             Fight fight = new Fight(h);
