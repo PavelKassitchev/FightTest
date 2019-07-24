@@ -15,6 +15,9 @@ public class Order extends Message {
     public Order() {
         pathsOrder = new Array<Path>();
         mileStone = new MileStone();
+        seekBattle = true;
+        retreatLevel = 0.7;
+
     }
 
     public Order(boolean seekBattle, double retreatLevel, double isForaging) {

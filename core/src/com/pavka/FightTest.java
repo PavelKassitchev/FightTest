@@ -33,8 +33,8 @@ public class FightTest {
             f.attach(new Squadron(FRANCE, hex));
 
             Force f1 = new Squadron(FRANCE, hex);
-            f1.strength = 60;
-            f1.morale = -0.1;
+            f1.strength = 80;
+            f1.morale = -1;
 
             Force a = new Battalion(AUSTRIA, hex);
             //Fight fight = new Fight(h);
