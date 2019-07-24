@@ -22,6 +22,9 @@ public class Fight {
     public static final double VICTORY_BONUS = 0.5;
     public static final double SMALL_VICTORY_BONUS = 0.2;
     public static final double LONG_DISTANCE_FIRE = 0.65;
+    public static final double NEXT_BONUS = 0.05;
+    public static final double NEXT_NEXT_BONUS = 0.1;
+    public static final double BACK_BONUS = 0.2;
 
     private Hex hex;
 
@@ -102,6 +105,10 @@ public class Fight {
     double whiteCharge;
     double blackFire;
     double blackCharge;
+    HashSet<Direction> whiteFronts;
+    HashSet<Direction> blackFronts;
+    double whiteDirectionBonus;
+    double blackDirectionBonus;
     int stage;
     int winner;
     Random random;
@@ -113,6 +120,8 @@ public class Fight {
         blackUnits = new Array<Unit>();
         white = new HashMap<Force, Integer>();
         black = new HashMap<Force, Integer>();
+        whiteFronts = new HashSet<Direction>();
+        blackFronts = new HashSet<Direction>();
         for (Force w : hex.whiteForces) {
             whiteInitStrength += w.strength;
             if (w.isUnit) {
@@ -154,7 +163,9 @@ public class Fight {
     }
 
     public void init() {
-        boolean blackAdvantage = blackInitStrength > whiteInitStrength || blackInitPower > whiteInitPower;
+        boolean blackAdvantage = blackInitStrength > whiteInitStrength || blackInitPower >= whiteInitPower;
+        Direction whiteInitDirection = null;
+        Direction blackInitDirection = null;
         for (Force f: hex.whiteForces) {
             if (blackAdvantage && f.morale < 0){
                 whiteImprisoned += f.strength;
@@ -162,6 +173,23 @@ public class Fight {
             }
             else {
                 white.put(f, f.strength);
+                if (f.getForwardHex() != null) {
+                    Direction d = hex.getDirection(f.getForwardHex());
+                    if (whiteFronts.isEmpty()) {
+                        whiteInitDirection = d;
+                    }
+                    else if (whiteFronts.add(d)) {
+                        if (d == whiteInitDirection.getLeftForward() || d == whiteInitDirection.getRightForward()) {
+                            whiteDirectionBonus += NEXT_BONUS;
+                        }
+                        if (d == whiteInitDirection.getLeftBack() || d == whiteInitDirection.getRightBack()) {
+                            whiteDirectionBonus += NEXT_NEXT_BONUS;
+                        }
+                        if (d == whiteInitDirection.getOpposite()) {
+                            whiteDirectionBonus += BACK_BONUS;
+                        }
+                    }
+                }
                 whiteStrength += f.strength;
                 if (f.isUnit) {
                     Unit u = (Unit)f;
@@ -189,6 +217,23 @@ public class Fight {
             }
             else {
                 black.put(f, f.strength);
+                if (f.getForwardHex() != null) {
+                    Direction d = hex.getDirection(f.getForwardHex());
+                    if (blackFronts.isEmpty()) {
+                        blackInitDirection = d;
+                    }
+                    else if (blackFronts.add(d)) {
+                        if (d == blackInitDirection.getLeftForward() || d == blackInitDirection.getRightForward()) {
+                            blackDirectionBonus += NEXT_BONUS;
+                        }
+                        if (d == blackInitDirection.getLeftBack() || d == blackInitDirection.getRightBack()) {
+                            whiteDirectionBonus += NEXT_NEXT_BONUS;
+                        }
+                        if (d == blackInitDirection.getOpposite()) {
+                            blackDirectionBonus += BACK_BONUS;
+                        }
+                    }
+                }
                 blackStrength += f.strength;
                 if (f.isUnit) {
                     Unit u = (Unit)f;
@@ -239,13 +284,13 @@ public class Fight {
 
             for (Unit u : whiteUnits) {
                 u.fire(1);
-                double ratio = u.strength / whiteStrength;
+                //double ratio = u.strength / whiteStrength;
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
                 whiteCasualties += hitUnit(u, randomFactor * fireOnWhite, randomFactor * chargeOnWhite);
             }
             for (Unit u : blackUnits) {
                 u.fire(1);
-                double ratio = u.strength / blackStrength;
+                //double ratio = u.strength / blackStrength;
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
                 blackCasualties += hitUnit(u, randomFactor * fireOnBlack, randomFactor * chargeOnBlack);
             }
