@@ -17,7 +17,7 @@ public class Fight {
     public static final double CASUALITY_INTO_MORALE = 3.3;
     public static final int CHARGE_ON_ENEMY = 30;
     public static final int PURSUIT_CHARGE = 45;
-    public static final double PURSUIT_ARTILLERY_FACTOR = 2.5;
+    public static final double PURSUIT_ARTILLERY_FACTOR = 1.25;
     public static final double PURSUIT_CAVALRY_FACTOR = 0.75;
     public static final int MIN_SOLDIERS = 6;
     public static final double MIN_MORALE = 0.2;
@@ -30,6 +30,10 @@ public class Fight {
     public static final double NEXT_BONUS = 0.05;
     public static final double NEXT_NEXT_BONUS = 0.1;
     public static final double BACK_BONUS = 0.2;
+
+    public static final double FIRE_ON_ARTILLERY = 0.5;
+    public static final double CHARGE_ON_ARTILLERY = 1.25;
+    public static final double CHARGE_ON_CAVALRY = 0.75;
 
     private Hex hex;
 
@@ -89,6 +93,7 @@ public class Fight {
     class Force setRetreatDirection from many enemies(?), method surrender added
     local variable Fight fight and method startFight are added to Hex class
     default constructor Order() - added retreatLevel 0,7;
+    FIRE_ON_ARTILLERY, CHARGE_ON_ARTILLERY and CHARGE_ON_CAVALRY moved from Unit bearLoss and changeMorale to hitUnit in Fight
 
      */
 
@@ -419,10 +424,18 @@ public class Fight {
 
     public int hitUnit(Unit unit, double fire, double charge) {
         int in = unit.strength;
-
-        unit.bearLoss(fire);
+        double f = fire;
+        double c = charge;
+        if (unit.type == ARTILLERY) {
+            f *= FIRE_ON_ARTILLERY;
+            c *= CHARGE_ON_ARTILLERY;
+        }
+        if (unit.type == CAVALRY) {
+            c *= CHARGE_ON_CAVALRY;
+        }
+        unit.bearLoss(f);
         int out = unit.strength;
-        unit.changeMorale(charge);
+        unit.changeMorale(c);
 
 
         return in - out;
