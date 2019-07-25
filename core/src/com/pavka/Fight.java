@@ -273,6 +273,21 @@ public class Fight {
         }
     }
 
+    private int pursuit(Force force) {
+        int prisoners = 0;
+        int catching = 0;
+        if (force.nation.color == WHITE) {
+            catching = (int)(PURSUIT_CHARGE * blackCharge * force.strength / whiteStrength);
+            if (catching >= force.strength) {
+                whiteImprisoned += force.strength;
+                white.remove(force);
+                force.surrender();
+            }
+
+        }
+        return prisoners;
+    }
+
     public int resolveStage() {
         System.out.println("START STAGE " + ++stage);
         double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
