@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+import static com.pavka.Nation.BLACK;
 import static com.pavka.Nation.WHITE;
+import static com.pavka.Unit.ARTILLERY;
+import static com.pavka.Unit.CAVALRY;
 
 
 public class Fight {
@@ -14,6 +17,8 @@ public class Fight {
     public static final double CASUALITY_INTO_MORALE = 3.3;
     public static final int CHARGE_ON_ENEMY = 30;
     public static final int PURSUIT_CHARGE = 45;
+    public static final double PURSUIT_ARTILLERY_FACTOR = 2.5;
+    public static final double PURSUIT_CAVALRY_FACTOR = 0.75;
     public static final int MIN_SOLDIERS = 6;
     public static final double MIN_MORALE = 0.2;
     public static final double MORALE_PENALTY = -0.03;
@@ -275,17 +280,49 @@ public class Fight {
         }
     }
 
-    private int pursuit(Force force) {
+    private int pursuit(Unit unit) {
         int prisoners = 0;
         int catching = 0;
-        if (force.nation.color == WHITE) {
-            catching = (int)(PURSUIT_CHARGE * blackCharge * force.strength / whiteStrength);
-            if (catching >= force.strength) {
-                whiteImprisoned += force.strength;
-                white.remove(force);
-                force.surrender();
+        double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
+        if (unit.nation.color == WHITE) {
+            catching = (int)(PURSUIT_CHARGE * blackCharge * (1 - circlingFactor) * unit.strength / whiteStrength);
+            if (unit.type == ARTILLERY) catching *= PURSUIT_ARTILLERY_FACTOR;
+            if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
+            if (catching >= unit.strength) {
+                whiteImprisoned += unit.strength;
+                if (unit.isSub) {
+                    unit.superForce.detach(unit);
+                }
+                else {
+                    white.remove(unit);
+                }
+                unit.surrender();
             }
-
+            else {
+                double ratio = catching / unit.strength;
+                whiteImprisoned += catching;
+                unit.bearLoss(ratio);
+            }
+        }
+        if (unit.nation.color == BLACK) {
+            catching = (int)(PURSUIT_CHARGE * whiteCharge * (1 + circlingFactor) * unit.strength / blackStrength);
+            if (unit.type == ARTILLERY) catching *= PURSUIT_ARTILLERY_FACTOR;
+            if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
+            if (catching >= unit.strength) {
+                blackImprisoned += unit.strength;
+                if (unit.isSub) {
+                    unit.superForce.detach(unit);
+                }
+                else {
+                    black.remove(unit);
+                }
+                unit.surrender();
+            }
+            else {
+                double ratio = catching / unit.strength;
+                blackImprisoned += catching;
+                unit.bearLoss(ratio);
+            }
         }
         return prisoners;
     }

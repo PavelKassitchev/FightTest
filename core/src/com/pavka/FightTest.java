@@ -31,12 +31,12 @@ public class FightTest {
             Hex h = new Hex();
             Force f = new Squadron(FRANCE, hex);
             f.order.frontDirection = NORTHEAST;
-            //f.attach(new Squadron(FRANCE, hex));
+            f.attach(new Squadron(FRANCE, hex));
             //f.attach(new Squadron(FRANCE, hex));
 
             Force f1 = new Squadron(FRANCE, hex);
             f1.order.frontDirection = SOUTHWEST;
-            //.strength = 80;
+            f1.strength = 10;
             //f1.morale = -1;
 
             Force a = new Battalion(AUSTRIA, hex);
