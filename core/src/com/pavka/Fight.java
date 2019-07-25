@@ -179,10 +179,11 @@ public class Fight {
                 f.surrender();
             } else {
                 white.put(f, f.strength);
-                if (f.getForwardHex() != null) {
-                    Direction d = hex.getDirection(f.getForwardHex());
+                if (f.order.frontDirection != null) {
+                    Direction d = f.order.frontDirection;
                     if (whiteFronts.isEmpty()) {
                         whiteInitDirection = d;
+                        whiteFronts.add(d);
                     } else if (whiteFronts.add(d)) {
                         if (d == whiteInitDirection.getLeftForward() || d == whiteInitDirection.getRightForward()) {
                             whiteDirectionBonus += NEXT_BONUS;
@@ -218,10 +219,11 @@ public class Fight {
                 f.surrender();
             } else {
                 black.put(f, f.strength);
-                if (f.getForwardHex() != null) {
-                    Direction d = hex.getDirection(f.getForwardHex());
+                if (f.order.frontDirection != null) {
+                    Direction d = f.order.frontDirection;
                     if (blackFronts.isEmpty()) {
                         blackInitDirection = d;
+                        blackFronts.add(d);
                     } else if (blackFronts.add(d)) {
                         if (d == blackInitDirection.getLeftForward() || d == blackInitDirection.getRightForward()) {
                             blackDirectionBonus += NEXT_BONUS;
@@ -310,7 +312,7 @@ public class Fight {
                 u.fire(1);
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
                 whiteCasualties += hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u),
-                        randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 + circlingFactor));
+                        randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor));
                 if (u.morale < MIN_MORALE) {
                     whiteRouted.add(u);
                     if (u.isSub) {
@@ -334,7 +336,7 @@ public class Fight {
                 u.fire(1);
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
                 blackCasualties += hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u),
-                        randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 - circlingFactor));
+                        randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor));
                 if (u.morale < MIN_MORALE) {
                     blackRouted.add(u);
                     if (u.isSub) {
