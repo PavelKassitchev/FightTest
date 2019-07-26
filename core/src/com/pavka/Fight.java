@@ -93,7 +93,9 @@ public class Fight {
     class Force setRetreatDirection from many enemies(?), method surrender added
     local variable Fight fight and method startFight are added to Hex class
     default constructor Order() - added retreatLevel 0,7;
-    FIRE_ON_ARTILLERY, CHARGE_ON_ARTILLERY and CHARGE_ON_CAVALRY moved from Unit bearLoss and changeMorale to hitUnit in Fight
+    FIRE_ON_ARTILLERY, CHARGE_ON_ARTILLERY and CHARGE_ON_CAVALRY moved from Unit bearLoss and changeMorale to hitUnit in Fight;
+    Unit.route() added;
+    force.formerSuper = force.superForce; added to Force.detach()
 
      */
 
@@ -119,8 +121,8 @@ public class Fight {
     double blackCharge;
     HashSet<Direction> whiteFronts;
     HashSet<Direction> blackFronts;
-    HashSet<Force> whiteRouted;
-    HashSet<Force> blackRouted;
+    HashSet<Unit> whiteRouted;
+    HashSet<Unit> blackRouted;
     double whiteDirectionBonus;
     double blackDirectionBonus;
     int stage;
@@ -135,8 +137,8 @@ public class Fight {
         blackUnits = new Array<Unit>();
         white = new HashMap<Force, Integer>();
         black = new HashMap<Force, Integer>();
-        whiteRouted = new HashSet<Force>();
-        blackRouted = new HashSet<Force>();
+        whiteRouted = new HashSet<Unit>();
+        blackRouted = new HashSet<Unit>();
         whiteFronts = new HashSet<Direction>();
         blackFronts = new HashSet<Direction>();
         for (Force w : hex.whiteForces) {
@@ -295,12 +297,6 @@ public class Fight {
             if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
             if (catching >= unit.strength) {
                 whiteImprisoned += unit.strength;
-                if (unit.isSub) {
-                    unit.superForce.detach(unit);
-                }
-                else {
-                    white.remove(unit);
-                }
                 unit.surrender();
             }
             else {
@@ -315,12 +311,6 @@ public class Fight {
             if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
             if (catching >= unit.strength) {
                 blackImprisoned += unit.strength;
-                if (unit.isSub) {
-                    unit.superForce.detach(unit);
-                }
-                else {
-                    black.remove(unit);
-                }
                 unit.surrender();
             }
             else {
@@ -357,12 +347,14 @@ public class Fight {
                         randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor));
                 if (u.morale < MIN_MORALE) {
                     whiteRouted.add(u);
+                    u.isDisordered = true;
                     if (u.isSub) {
                         for (Force force : u.superForce.forces) {
                             if (force.isUnit && force != u) {
                                 ((Unit) force).changeMorale(MORALE_PENALTY);
                                 if (force.morale <= MIN_MORALE) {
                                     whiteRouted.add((Unit)force);
+                                    ((Unit)force).isDisordered = true;
                                 }
                             }
                         }
@@ -381,12 +373,14 @@ public class Fight {
                         randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor));
                 if (u.morale < MIN_MORALE) {
                     blackRouted.add(u);
+                    u.isDisordered = true;
                     if (u.isSub) {
                         for (Force force : u.superForce.forces) {
                             if (force.isUnit && force != u) {
                                 ((Unit) force).changeMorale(MORALE_PENALTY);
                                 if (force.morale <= MIN_MORALE) {
                                     blackRouted.add((Unit)force);
+                                    ((Unit)force).isDisordered = true;
                                 }
                             }
                         }
@@ -396,6 +390,25 @@ public class Fight {
                     blackFire += u.fire * hex.getFireFactor(u);
                     blackCharge += u.charge * hex.getChargeFactor(u);
                     blackStrength += u.strength;
+                }
+            }
+            for (Unit unit: whiteRouted) {
+                if (unit.isDisordered) {
+                    if(!unit.isSub) white.remove(unit);
+                    whiteUnits.removeValue(unit, true);
+                    unit.route();
+                    pursuit((unit));
+                    if (unit != null) unit.isDisordered = false;
+                }
+            }
+
+            for (Unit unit: blackRouted) {
+                if (unit.isDisordered) {
+                    if(!unit.isSub) black.remove(unit);
+                    blackUnits.removeValue(unit, true);
+                    unit.route();
+                    pursuit((unit));
+                    if (unit != null) unit.isDisordered = false;
                 }
             }
             //for control only

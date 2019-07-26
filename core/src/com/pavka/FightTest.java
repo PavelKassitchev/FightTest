@@ -38,8 +38,10 @@ public class FightTest {
             f1.order.frontDirection = SOUTHWEST;
             f1.strength = 10;
             //f1.morale = -1;
+            Force f3 = new Battery(FRANCE, hex);
 
             Force a = new Battalion(AUSTRIA, hex);
+            Force a1 = new Battery(AUSTRIA, hex);
             //Fight fight = new Fight(h);
 
             Fight fight = hex.startFight();
@@ -53,6 +55,8 @@ public class FightTest {
             f.disappear();
             f1.disappear();
             a.disappear();
+            f3.disappear();
+            a1.disappear();
         }
         System.out.println("Whites - " + w + " Blacks - " + b);
         System.out.println();

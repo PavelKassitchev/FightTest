@@ -253,6 +253,7 @@ public class Force extends Image {
     public Force detach(Force force) {
         force.isSub = false;
         //System.out.println("Detaching... From " + force.superForce.name + " Play: " + force.superForce.play);
+        force.formerSuper = force.superForce;
         force.superForce = null;
         force.hex = hex;
         hex.locate(force);

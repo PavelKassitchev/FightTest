@@ -105,6 +105,11 @@ public abstract class Unit extends Force {
         return this;
     }
 
+    public void route() {
+        if (isSub) superForce.detach(this);
+        //TODO
+    }
+
     public double fire(double ratio) {
         double fireAttack = fire;
         double initStock = ammoStock;
