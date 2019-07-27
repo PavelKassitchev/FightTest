@@ -96,6 +96,7 @@ public class Fight {
     FIRE_ON_ARTILLERY, CHARGE_ON_ARTILLERY and CHARGE_ON_CAVALRY moved from Unit bearLoss and changeMorale to hitUnit in Fight;
     Unit.route() added;
     force.formerSuper = force.superForce; added to Force.detach()
+    Hex.clean() added
 
      */
 
@@ -179,6 +180,7 @@ public class Fight {
             }
 
         }
+        System.out.println("Battle begins! White: " + whiteInitStrength + " Black: " + blackInitStrength);
     }
 
     public void init() {
@@ -343,8 +345,10 @@ public class Fight {
             for (Unit u : whiteUnits) {
                 u.fire(1);
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
-                whiteCasualties += hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u),
+                int casualties = hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u),
                         randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor));
+                System.out.println("Unit: " + u.type + " " + u + " White casualties: " + casualties);
+                whiteCasualties += casualties;
                 if (u.morale < MIN_MORALE) {
                     whiteRouted.add(u);
                     u.isDisordered = true;
@@ -369,8 +373,10 @@ public class Fight {
             for (Unit u : blackUnits) {
                 u.fire(1);
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
-                blackCasualties += hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u),
+                int casualties = hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u),
                         randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor));
+                System.out.println("Unit: "+ u.type + " " + u + " Black casualties: " + casualties);
+                blackCasualties += casualties;
                 if (u.morale < MIN_MORALE) {
                     blackRouted.add(u);
                     u.isDisordered = true;

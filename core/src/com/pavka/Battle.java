@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
+import static com.pavka.Unit.ARTILLERY;
+import static com.pavka.Unit.CAVALRY;
+
 
 public class Battle {
     public static final int FIRE_ON_UNIT = 40;
@@ -19,6 +22,10 @@ public class Battle {
     public static final double VICTORY_BONUS = 0.5;
     public static final double SMALL_VICTORY_BONUS = 0.2;
     public static final double LONG_DISTANCE_FIRE = 0.65;
+
+    public static final double FIRE_ON_ARTILLERY = 0.5;
+    public static final double CHARGE_ON_ARTILLERY = 1.25;
+    public static final double CHARGE_ON_CAVALRY = 0.75;
 
 
     Force attacker;
@@ -249,15 +256,23 @@ public class Battle {
             int initStrength = unit.strength;
             double ratio = (double) initStrength / attackerInit;
 
-            if (defender.isUnit && ((Unit) defender).type == Unit.ARTILLERY) {
+            if (defender.isUnit && ((Unit) defender).type == ARTILLERY) {
                 Battery b = (Battery) defender;
                 b.fire(ratio);
-                double fireEffect = LONG_DISTANCE_FIRE * ((0.7 + 0.6 * random.nextDouble() * b.fire * FIRE_ON_UNIT) / attackerInit);
+
+                double fireFactor = 1;
+                if (unit.type == ARTILLERY) fireFactor = 0.5;
+
+                double fireEffect = LONG_DISTANCE_FIRE * fireFactor * ((0.7 + 0.6 * random.nextDouble() * b.fire * FIRE_ON_UNIT) / attackerInit);
                 attackerKilled += hitUnit(unit, fireEffect, (-CASUALITY_INTO_MORALE * fireEffect));
             } else {
                 for (Battery b : defender.batteries) {
                     b.fire(ratio);
-                    double fireEffect = LONG_DISTANCE_FIRE * ((0.7 + 0.6 * random.nextDouble() * b.fire * FIRE_ON_UNIT) / attackerInit);
+
+                    double fireFactor = 1;
+                    if (unit.type == ARTILLERY) fireFactor = 0.5;
+
+                    double fireEffect = LONG_DISTANCE_FIRE * fireFactor * ((0.7 + 0.6 * random.nextDouble() * b.fire * FIRE_ON_UNIT) / attackerInit);
                     attackerKilled += hitUnit(unit, fireEffect, (-CASUALITY_INTO_MORALE * fireEffect));
                 }
             }
@@ -364,8 +379,19 @@ public class Battle {
                     Unit b = defIterator.next();
                     double ratio = (double) b.strength / initDef;
                     double fluke = 0.7 + 0.6 * random.nextDouble();
+
+                    double fireFactor = 1;
+                    double chargeFactor = 1;
+                    if (b.type == ARTILLERY) {
+                        fireFactor = FIRE_ON_ARTILLERY;
+                        chargeFactor = CHARGE_ON_ARTILLERY;
+                    }
+                    if (b.type == CAVALRY) chargeFactor = CHARGE_ON_CAVALRY;
+
                     //fluke = 1;
-                    defenderKilled += hitUnit(b, fluke * fireOnDefender, fluke * chargeOnDefender);
+                    int killed = hitUnit(b, fluke * fireOnDefender * fireFactor, fluke * chargeOnDefender * chargeFactor);
+                    System.out.println("Defender casualties: " + killed);
+                    defenderKilled += killed;
                     for (Unit unit : attackerUnits) unit.fire(ratio);
                 }
             }
@@ -407,8 +433,19 @@ public class Battle {
                     Unit b = attIterator.next();
                     double ratio = (double) b.strength / initAtt;
                     double fluke = 0.7 + 0.6 * random.nextDouble();
+
+                    double fireFactor = 1;
+                    double chargeFactor = 1;
+                    if (b.type == ARTILLERY) {
+                        fireFactor = FIRE_ON_ARTILLERY;
+                        chargeFactor = CHARGE_ON_ARTILLERY;
+                    }
+                    if (b.type == CAVALRY) chargeFactor = CHARGE_ON_CAVALRY;
+
                     //fluke = 1;
-                    attackerKilled += hitUnit(b, fluke * fireOnAttacker, fluke * chargeOnAttacker);
+                    int killed = hitUnit(b, fluke * fireOnAttacker * fireFactor, fluke * chargeOnAttacker * chargeFactor);
+                    System.out.println("Attacker casualties: " + killed);
+                    attackerKilled += killed;
                     for (Unit unit : defenderUnits) unit.fire(ratio);
                 }
 

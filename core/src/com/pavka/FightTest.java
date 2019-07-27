@@ -29,34 +29,37 @@ public class FightTest {
         int b = 0;
         for (int i = 0; i < 100; i++) {
             Hex h = new Hex();
-            Force f = new Squadron(FRANCE, hex);
+            Force f = new Force(new Squadron(FRANCE, hex));
             f.order.frontDirection = NORTHEAST;
             f.attach(new Squadron(FRANCE, hex));
-            //f.attach(new Squadron(FRANCE, hex));
+            f.attach(new Squadron(FRANCE, hex));
 
-            Force f1 = new Squadron(FRANCE, hex);
-            f1.order.frontDirection = SOUTHWEST;
-            f1.strength = 10;
+            //Force f1 = new Squadron(FRANCE, hex);
+            //f1.order.frontDirection = SOUTHWEST;
+            //f1.strength = 10;
             //f1.morale = -1;
             Force f3 = new Battery(FRANCE, hex);
+            f.attach(f3);
 
-            Force a = new Battalion(AUSTRIA, hex);
+            Force a = new Force(new Battalion(AUSTRIA, hex));
             Force a1 = new Battery(AUSTRIA, hex);
+            a.attach(a1);
             //Fight fight = new Fight(h);
 
             Fight fight = hex.startFight();
             fight.init();
             fight.resolveStage();
-            fight.resolveStage();
-            System.out.println(fight.whiteDirectionBonus + " " + fight.blackDirectionBonus);
+            //fight.resolveStage();
+            //System.out.println(fight.whiteDirectionBonus + " " + fight.blackDirectionBonus);
             //fight.resolveStage();
             if(f.morale > a.morale) w++;
             else if (f.morale < a.morale) b++;
-            f.disappear();
-            f1.disappear();
+            /*f.disappear();
+            //f1.disappear();
             a.disappear();
             f3.disappear();
-            a1.disappear();
+            a1.disappear();*/
+            hex.clean();
         }
         System.out.println("Whites - " + w + " Blacks - " + b);
         System.out.println();

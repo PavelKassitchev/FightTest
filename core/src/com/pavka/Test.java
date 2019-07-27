@@ -16,8 +16,8 @@ public class Test {
         //System.out.println(((Unit)test).type);
 
         //MAIN SECTION
-        Force france = createForce(FRANCE,0, 9, 0);
-        Force austria = createForce(AUSTRIA, 3, 0, 0);
+        Force france = createForce(FRANCE,0, 3, 1);
+        Force austria = createForce(AUSTRIA, 1, 0, 1);
 
         //Force austria = createDivision();
         austria.name = "Austrian division";
@@ -27,8 +27,8 @@ public class Test {
         //france.attach(f);
         //austria.attach(a);
 
-        france.order = new Order(true, 0.7, 0);
-        austria.order = new Order(false, 0.7, 0);
+        france.order = new Order(true, 0.1, 0);
+        austria.order = new Order(false, 0.1, 0);
 
 
         Battle battle = new Battle(france, austria);

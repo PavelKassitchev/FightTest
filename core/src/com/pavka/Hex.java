@@ -98,6 +98,11 @@ public class Hex extends Image {
         return 1;
     }
 
+    public void clean() {
+        for (Force f: whiteForces) f.disappear();
+        for (Force f: blackForces) f.disappear();
+    }
+
     /*@Override
     public void draw(Batch batch, float alpha) {
         batch.draw(texture, getRelX(), getRelY());
