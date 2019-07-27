@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -24,8 +25,8 @@ public class Force extends Image {
 
     public Play play;
 
-   // public Texture textureFrance = new Texture("symbols/CavBlueDivision.png");
-  //  public Texture textureAustria = new Texture("symbols/CavRedDivision.png");
+    // public Texture textureFrance = new Texture("symbols/CavBlueDivision.png");
+    //  public Texture textureAustria = new Texture("symbols/CavRedDivision.png");
 
     public boolean isSelected;
 
@@ -71,8 +72,8 @@ public class Force extends Image {
     public void draw(Batch batch, float alpha) {
         //Texture texture = nation == FRANCE ? textureFrance : textureAustria;
 
-      //  if (!isSelected) batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE, IMAGE_SIZE);
-      //  else batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE * 1.1f, IMAGE_SIZE * 1.1f);
+        //  if (!isSelected) batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE, IMAGE_SIZE);
+        //  else batch.draw(texture, hex.getRelX() - 8, hex.getRelY() - 8, IMAGE_SIZE * 1.1f, IMAGE_SIZE * 1.1f);
 
         //THIS IS FOR DELAYED VIEWS
 
@@ -166,12 +167,10 @@ public class Force extends Image {
         if (enemy.getForwardHex() != null) {
             order.retreatDirection = hex.getDirection(enemy.getForwardHex());
 
-        }
-        else if (getBackHex() != null) {
+        } else if (getBackHex() != null) {
             order.retreatDirection = hex.getDirection(getBackHex());
 
-        }
-        else {
+        } else {
             order.retreatDirection = Direction.getRandom();
 
         }
@@ -231,7 +230,7 @@ public class Force extends Image {
     public void setPlay(Play play) {
         this.play = play;
         if (!isUnit) {
-            for (Force force: forces) force.setPlay(play);
+            for (Force force : forces) force.setPlay(play);
         }
     }
 
@@ -465,7 +464,7 @@ public class Force extends Image {
 
     public Unit selectRandomUnit() {
         if (isUnit) return (Unit) this;
-
+        if (forces.isEmpty()) return null;
         Random random = new Random();
         ArrayList<Unit> units = new ArrayList<Unit>();
         units.addAll(battalions);
@@ -818,7 +817,7 @@ public class Force extends Image {
     public void setHex(Hex hex) {
         this.hex = hex;
         if (!isUnit) {
-            for (Force force: forces) {
+            for (Force force : forces) {
                 force.setHex(hex);
             }
         }
@@ -897,14 +896,15 @@ public class Force extends Image {
                 food += h.currentHarvest;
                 space -= h.currentHarvest;
                 h.currentHarvest = 0;
-               //System.out.println("ZERO");
-           }
+                //System.out.println("ZERO");
+            }
         }
         distributeFood(food);
         return food;
     }
 
     public void disappear() {
+
         hex.eliminate(this);
         if (isSub) superForce.detach(this);
         if (play != null) {
@@ -915,8 +915,7 @@ public class Force extends Image {
             }
             remove();
         }
-
     }
-
-
 }
+
+
