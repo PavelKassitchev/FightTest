@@ -16,8 +16,8 @@ public class Test {
         //System.out.println(((Unit)test).type);
 
         //MAIN SECTION
-        Force france = createForce(FRANCE,0, 3, 1);
-        Force austria = createForce(AUSTRIA, 1, 0, 1);
+        Force france = createForce(FRANCE,0, 1, 0);
+        Force austria = createForce(AUSTRIA, 0, 0, 1);
 
         //Force austria = createDivision();
         austria.name = "Austrian division";

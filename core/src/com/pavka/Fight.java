@@ -9,8 +9,7 @@ import java.util.Set;
 
 import static com.pavka.Nation.BLACK;
 import static com.pavka.Nation.WHITE;
-import static com.pavka.Unit.ARTILLERY;
-import static com.pavka.Unit.CAVALRY;
+import static com.pavka.Unit.*;
 
 
 public class Fight {
@@ -129,6 +128,14 @@ public class Fight {
     HashSet<Unit> blackRouted;
     double whiteDirectionBonus;
     double blackDirectionBonus;
+    int whiteBattalions;
+    int whiteSquadrons;
+    int whiteBatteries;
+    int whiteWagoms;
+    int blackBattalions;
+    int blackSquadrons;
+    int blackBatteries;
+    int blackWagons;
     int stage;
     int winner;
     Random random;
@@ -286,10 +293,26 @@ public class Fight {
             whiteFire += u.fire * hex.getFireFactor(u);
             whiteCharge += u.charge * hex.getChargeFactor(u);
             whiteUnits.add(u);
+            switch(u.type) {
+                case INFANTRY: whiteBattalions++;
+                break;
+                case CAVALRY: whiteSquadrons++;
+                break;
+                case ARTILLERY: whiteBatteries++;
+                break;
+            }
         } else {
             blackFire += u.fire * hex.getFireFactor(u);
             blackCharge += u.charge * hex.getChargeFactor(u);
             blackUnits.add(u);
+            switch(u.type) {
+                case INFANTRY: blackBattalions++;
+                    break;
+                case CAVALRY: blackSquadrons++;
+                    break;
+                case ARTILLERY: blackBatteries++;
+                    break;
+            }
         }
     }
 
@@ -344,12 +367,39 @@ public class Fight {
         return prisoners;
     }
 
+    private boolean onlyWhiteBatteries() {
+        return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && (blackBattalions > 0 || blackSquadrons > 0));
+    }
+    private boolean onlyBlackBatteries() {
+        return (blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0 && (whiteBattalions > 0 || whiteSquadrons > 0));
+    }
+    private boolean onlyBatteries() {
+        return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0);
+    }
+
     public int resolveStage() {
         System.out.println("START STAGE " + ++stage);
         init();
         System.out.println("White Units: " + whiteUnits);
         System.out.println("Black Units: " + blackUnits);
+        System.out.println(whiteBattalions + " " + whiteSquadrons + " " + whiteBatteries
+        + " " + blackBattalions + " " + blackSquadrons + " " + blackBatteries);
+
+        if(onlyBatteries()) {
+            for(Force force: white.keySet()) force.retreat();
+            for(Force force: black.keySet()) force.retreat();
+            return 0;
+        }
+        if(onlyWhiteBatteries()) {
+            for(Force force: white.keySet()) force.retreat();
+            return -1;
+        }
+        if(onlyBlackBatteries()) {
+            for(Force force: black.keySet()) force.retreat();
+            return 1;
+        }
         if (whiteStrength == 0 || blackStrength == 0) System.out.println("NO ENEMIES!");
+
         else {
             double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
 
@@ -380,7 +430,7 @@ public class Fight {
                 System.out.println("Unit: " + u.type + "  " + u.nation + " " + u + " White casualties: " + casualties + " unit morale: " + u.morale
                 + " Random factor = " + randomFactor);
                 whiteCasualties += casualties;
-                if (u.morale < MIN_MORALE) {
+                if (u != null && u.morale < MIN_MORALE) {
                     whiteRouted.add(u);
                     u.isDisordered = true;
                     whiteDisordered += u.strength;
@@ -413,7 +463,7 @@ public class Fight {
                 System.out.println("Unit: " + u.type + " " + u.nation + " " + u + " Black casualties: " + casualties + " Unit morale: " + u.morale
                 + " Random factor = " + randomFactor);
                 blackCasualties += casualties;
-                if (u.morale < MIN_MORALE) {
+                if (u != null && u.morale < MIN_MORALE) {
                     blackRouted.add(u);
                     u.isDisordered = true;
                     blackDisordered += u.strength;
@@ -494,6 +544,9 @@ public class Fight {
             for (Force f : hex.blackForces) System.out.println(f + " Morale - " + f.morale);
 
             if (winner != 0) System.out.println("WINNER = " + winner);
+
+            //Retreating phase
+
         }
         return winner;
 
