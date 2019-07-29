@@ -108,7 +108,7 @@ public class FightTest {
             Fight fight = hex.startFight();
 
             //Battle battle = new Battle(force1, force2);
-            fight.resolveStage();
+            fight.resolve();
 
             if (att.morale > def.morale) a++;
             else
@@ -131,7 +131,8 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(1, 0, 0, 0, 0, 4);
+        getStat(1, 10, 0, 0, 0, 4);
+
     }
 
     private static void herac(int i) {

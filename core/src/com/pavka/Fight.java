@@ -17,6 +17,7 @@ public class Fight {
     public static final double CASUALITY_INTO_MORALE = 3.3;
     public static final int CHARGE_ON_ENEMY = 30;
     public static final int PURSUIT_CHARGE = 45;
+    public static final int PURSUIT_ON_RETREATER = 25;
     public static final double PURSUIT_ARTILLERY_FACTOR = 1.5;
     public static final double PURSUIT_CAVALRY_FACTOR = 0.5;
     public static final int MIN_SOLDIERS = 6;
@@ -377,6 +378,86 @@ public class Fight {
         return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0);
     }
 
+    public int pursuitRetreaters(Force force) {
+        int imprisoned = 0;
+
+        double pursuitCharge = 0;
+        if (force.nation.color == WHITE) {
+            pursuitCharge = blackCharge * force.strength / whiteStrength - force.charge;
+            if(pursuitCharge > 0) {
+                int prisoners = (int)(pursuitCharge * PURSUIT_ON_RETREATER);
+                if (prisoners > force.strength) {
+                    imprisoned = force.strength;
+                    for (Unit u: force.battalions) {
+                        whiteDisordered =+ u.strength;
+                        u.surrender();
+                    }
+                    for (Unit u: force.squadrons) {
+                        whiteDisordered += u.strength;
+                        u.surrender();
+                    }
+                    for (Unit u: force.batteries) {
+                        whiteDisordered += u.strength;
+                        u.surrender();
+                    }
+                }
+                else {
+                    imprisoned = prisoners;
+                    whiteImprisoned += imprisoned;
+                    whiteDisordered += imprisoned;
+                    double ratio = (double)prisoners / force.strength;
+                    for (Unit u: force.battalions) {
+                        u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.squadrons) {
+                        u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.batteries) {
+                        u.bearLoss(ratio);
+                    }
+                }
+            }
+        }
+        if (force.nation.color == BLACK) {
+            pursuitCharge = whiteCharge * force.strength / blackStrength - force.charge;
+            if(pursuitCharge > 0) {
+                int prisoners = (int)(pursuitCharge * PURSUIT_ON_RETREATER);
+                if (prisoners > force.strength) {
+                    imprisoned = force.strength;
+                    for (Unit u: force.battalions) {
+                        blackDisordered += u.strength;
+                        u.surrender();
+                    }
+                    for (Unit u: force.squadrons) {
+                        blackDisordered += u.strength;
+                        u.surrender();
+                    }
+                    for (Unit u: force.batteries) {
+                        blackDisordered += u.strength;
+                        u.surrender();
+                    }
+                }
+                else {
+                    imprisoned = prisoners;
+                    blackImprisoned += imprisoned;
+                    blackDisordered += imprisoned;
+                    double ratio = (double)prisoners / force.strength;
+                    for (Unit u: force.battalions) {
+                        u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.squadrons) {
+                        u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.batteries) {
+                        u.bearLoss(ratio);
+                    }
+                }
+            }
+        }
+
+        return imprisoned;
+    }
+
     public int resolveStage() {
         System.out.println("START STAGE " + ++stage);
         init();
@@ -391,11 +472,28 @@ public class Fight {
             return 0;
         }
         if(onlyWhiteBatteries()) {
-            for(Force force: white.keySet()) force.retreat();
+            for(Force force: white.keySet()) {
+                force.retreat();
+                pursuitRetreaters(force);
+
+                System.out.println("WHITE: " + whiteUnits + " strength - " + whiteStrength + " casualties - " + whiteCasualties +
+                        " imprisoned - " + whiteImprisoned + " routed - " + (whiteDisordered - whiteImprisoned));
+                for (Force f : hex.whiteForces) System.out.println(f + " Morale - " + f.morale);
+                System.out.println("BLACK: " + blackUnits + " strength - " + blackStrength + " casualties - " + blackCasualties +
+                        " imprisoned - " + blackImprisoned + " routed - " + (blackDisordered - blackImprisoned));
+            }
             return -1;
         }
         if(onlyBlackBatteries()) {
-            for(Force force: black.keySet()) force.retreat();
+            for(Force force: black.keySet()) {
+                force.retreat();
+                pursuitRetreaters(force);
+                System.out.println("WHITE: " + whiteUnits + " strength - " + whiteStrength + " casualties - " + whiteCasualties +
+                        " imprisoned - " + whiteImprisoned + " routed - " + (whiteDisordered - whiteImprisoned));
+                for (Force f : hex.whiteForces) System.out.println(f + " Morale - " + f.morale);
+                System.out.println("BLACK: " + blackUnits + " strength - " + blackStrength + " casualties - " + blackCasualties +
+                        " imprisoned - " + blackImprisoned + " routed - " + (blackDisordered - blackImprisoned));
+            }
             return 1;
         }
         if (whiteStrength == 0 || blackStrength == 0) System.out.println("NO ENEMIES!");
@@ -525,30 +623,33 @@ public class Fight {
                     }
                 }
             }
-            //for control only
-            double whiteAmmo = 0;
-            for (Force w : hex.whiteForces) {
-                whiteAmmo += w.ammoStock;
-            }
-
-            double blackAmmo = 0;
-            for (Force b : hex.blackForces) {
-                blackAmmo += b.ammoStock;
-            }
-
-            System.out.println("WHITE: " + whiteUnits + " strength - " + whiteStrength + " casualties - " + whiteCasualties +
-                    " imprisoned - " + whiteImprisoned + " routed - " + (whiteDisordered - whiteImprisoned) + " ammo stock - " + whiteAmmo);
-            for (Force f : hex.whiteForces) System.out.println(f + " Morale - " + f.morale);
-            System.out.println("BLACK: " + blackUnits + " strength - " + blackStrength + " casualties - " + blackCasualties +
-                    " imprisoned - " + blackImprisoned + " routed - " + (blackDisordered - blackImprisoned) + " ammo stock - " + blackAmmo);
-            for (Force f : hex.blackForces) System.out.println(f + " Morale - " + f.morale);
-
-            if (winner != 0) System.out.println("WINNER = " + winner);
 
             //Retreating phase
 
         }
         return winner;
+
+    }
+
+    public void resolve() {
+        resolveStage();
+        double whiteAmmo = 0;
+        for (Force w : hex.whiteForces) {
+            whiteAmmo += w.ammoStock;
+        }
+
+        double blackAmmo = 0;
+        for (Force b : hex.blackForces) {
+            blackAmmo += b.ammoStock;
+        }
+        System.out.println("WHITE: " + whiteUnits + " strength - " + whiteStrength + " casualties - " + whiteCasualties +
+                " imprisoned - " + whiteImprisoned + " routed - " + (whiteDisordered - whiteImprisoned) + " ammo stock - " + whiteAmmo);
+        for (Force f : hex.whiteForces) System.out.println(f + " Morale - " + f.morale);
+        System.out.println("BLACK: " + blackUnits + " strength - " + blackStrength + " casualties - " + blackCasualties +
+                " imprisoned - " + blackImprisoned + " routed - " + (blackDisordered - blackImprisoned) + " ammo stock - " + blackAmmo);
+        for (Force f : hex.blackForces) System.out.println(f + " Morale - " + f.morale);
+
+        if (winner != 0) System.out.println("WINNER = " + winner);
 
     }
 
