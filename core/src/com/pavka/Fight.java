@@ -377,6 +377,7 @@ public class Fight {
     private boolean onlyBatteries() {
         return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0);
     }
+    //mistake
 
     public int pursuitRetreaters(Force force) {
         int imprisoned = 0;
