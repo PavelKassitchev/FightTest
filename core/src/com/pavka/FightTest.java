@@ -131,7 +131,7 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(1, 10, 0, 0, 0, 4);
+        getStat(1, 0, 0, 0, 0, 40);
 
     }
 

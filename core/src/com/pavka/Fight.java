@@ -389,23 +389,29 @@ public class Fight {
                 int prisoners = (int)(pursuitCharge * PURSUIT_ON_RETREATER);
                 if (prisoners > force.strength) {
                     imprisoned = force.strength;
+                    whiteDisordered += force.strength;
+                    whiteStrength -= force.strength;
+                    Array<Unit> units = new Array<Unit>();
+
                     for (Unit u: force.battalions) {
-                        whiteDisordered =+ u.strength;
-                        u.surrender();
+                        units.add(u);
                     }
                     for (Unit u: force.squadrons) {
-                        whiteDisordered += u.strength;
-                        u.surrender();
+                        units.add(u);
                     }
                     for (Unit u: force.batteries) {
-                        whiteDisordered += u.strength;
-                        u.surrender();
+                        units.add(u);
+                    }
+                    for(Unit u: units) {
+                        whiteUnits.removeValue(u, true);
+                        whiteImprisoned += u.surrender();
                     }
                 }
                 else {
                     imprisoned = prisoners;
                     whiteImprisoned += imprisoned;
                     whiteDisordered += imprisoned;
+                    whiteStrength -= imprisoned;
                     double ratio = (double)prisoners / force.strength;
                     for (Unit u: force.battalions) {
                         u.bearLoss(ratio);
@@ -425,23 +431,28 @@ public class Fight {
                 int prisoners = (int)(pursuitCharge * PURSUIT_ON_RETREATER);
                 if (prisoners > force.strength) {
                     imprisoned = force.strength;
+                    blackDisordered += force.strength;
+                    blackStrength -= force.strength;
+                    Array<Unit> units = new Array<Unit>();
                     for (Unit u: force.battalions) {
-                        blackDisordered += u.strength;
-                        u.surrender();
+                        units.add(u);
                     }
                     for (Unit u: force.squadrons) {
-                        blackDisordered += u.strength;
-                        u.surrender();
+                        units.add(u);
                     }
                     for (Unit u: force.batteries) {
-                        blackDisordered += u.strength;
-                        u.surrender();
+                        units.add(u);
+                    }
+                    for (Unit u: units) {
+                        blackUnits.removeValue(u, true);
+                        blackImprisoned += u.surrender();
                     }
                 }
                 else {
                     imprisoned = prisoners;
                     blackImprisoned += imprisoned;
                     blackDisordered += imprisoned;
+                    blackStrength -= imprisoned;
                     double ratio = (double)prisoners / force.strength;
                     for (Unit u: force.battalions) {
                         u.bearLoss(ratio);
