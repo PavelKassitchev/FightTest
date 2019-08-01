@@ -98,6 +98,7 @@ public class Fight {
     Unit.route() added;
     force.formerSuper = force.superForce; added to Force.detach()
     Hex.clean() added
+    Unit.bearLosses returns int
 
      */
 
@@ -408,20 +409,20 @@ public class Fight {
                     }
                 }
                 else {
-                    imprisoned = prisoners;
+                    //imprisoned = prisoners;
+                    double ratio = (double)prisoners / force.strength;
+                    for (Unit u: force.battalions) {
+                        imprisoned += u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.squadrons) {
+                        imprisoned += u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.batteries) {
+                        imprisoned +=u.bearLoss(ratio);
+                    }
                     whiteImprisoned += imprisoned;
                     whiteDisordered += imprisoned;
                     whiteStrength -= imprisoned;
-                    double ratio = (double)prisoners / force.strength;
-                    for (Unit u: force.battalions) {
-                        u.bearLoss(ratio);
-                    }
-                    for (Unit u: force.squadrons) {
-                        u.bearLoss(ratio);
-                    }
-                    for (Unit u: force.batteries) {
-                        u.bearLoss(ratio);
-                    }
                 }
             }
         }
@@ -449,20 +450,20 @@ public class Fight {
                     }
                 }
                 else {
-                    imprisoned = prisoners;
+                    //imprisoned = prisoners;
+                    double ratio = (double)prisoners / force.strength;
+                    for (Unit u: force.battalions) {
+                        imprisoned += u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.squadrons) {
+                        imprisoned += u.bearLoss(ratio);
+                    }
+                    for (Unit u: force.batteries) {
+                        imprisoned += u.bearLoss(ratio);
+                    }
                     blackImprisoned += imprisoned;
                     blackDisordered += imprisoned;
                     blackStrength -= imprisoned;
-                    double ratio = (double)prisoners / force.strength;
-                    for (Unit u: force.battalions) {
-                        u.bearLoss(ratio);
-                    }
-                    for (Unit u: force.squadrons) {
-                        u.bearLoss(ratio);
-                    }
-                    for (Unit u: force.batteries) {
-                        u.bearLoss(ratio);
-                    }
                 }
             }
         }
