@@ -482,6 +482,7 @@ public class Fight {
         if(onlyBatteries()) {
             for(Force force: white.keySet()) force.retreat();
             for(Force force: black.keySet()) force.retreat();
+            isOver = true;
             return 0;
         }
         if(onlyWhiteBatteries()) {
@@ -495,6 +496,7 @@ public class Fight {
                 System.out.println("BLACK: " + blackUnits + " strength - " + blackStrength + " casualties - " + blackCasualties +
                         " imprisoned - " + blackImprisoned + " routed - " + (blackDisordered - blackImprisoned));
             }
+            isOver = true;
             return -1;
         }
         if(onlyBlackBatteries()) {
@@ -507,6 +509,7 @@ public class Fight {
                 System.out.println("BLACK: " + blackUnits + " strength - " + blackStrength + " casualties - " + blackCasualties +
                         " imprisoned - " + blackImprisoned + " routed - " + (blackDisordered - blackImprisoned));
             }
+            isOver = true;
             return 1;
         }
         if (whiteStrength == 0 || blackStrength == 0) System.out.println("NO ENEMIES!");
