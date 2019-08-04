@@ -2,10 +2,7 @@ package com.pavka;
 
 import com.badlogic.gdx.utils.Array;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static com.pavka.Nation.BLACK;
 import static com.pavka.Nation.WHITE;
@@ -138,6 +135,7 @@ public class Fight {
     int blackSquadrons;
     int blackBatteries;
     int blackWagons;
+    double scale;
     int stage;
     int winner;
     Random random;
@@ -195,8 +193,22 @@ public class Fight {
         System.out.println();
         System.out.println("Battle begins! White: " + whiteInitStrength + " Black: " + blackInitStrength);
     }
+    private void clear() {
+        whiteFire = 0;
+        whiteCharge = 0;
+        blackFire = 0;
+        blackCharge = 0;
+        whiteStrength = 0;
+        blackStrength = 0;
+        whiteUnits = new Array<Unit>();
+        blackUnits = new Array<Unit>();
+    }
 
     public void init() {
+
+        clear();
+        scale = 1;
+
         boolean blackAdvantage = blackInitStrength > whiteInitStrength || blackInitPower >= whiteInitPower;
         Direction whiteInitDirection = null;
         Direction blackInitDirection = null;
@@ -205,7 +217,7 @@ public class Fight {
                 whiteImprisoned += f.strength;
                 f.surrender();
             } else {
-                white.put(f, f.strength);
+                if (!white.containsKey(f)) white.put(f, f.strength);
                 if (f.order.frontDirection != null) {
                     Direction d = f.order.frontDirection;
                     if (whiteFronts.isEmpty()) {
@@ -378,9 +390,10 @@ public class Fight {
     private boolean onlyBatteries() {
         return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0);
     }
-    //mistake
+
 
     public int pursuitRetreaters(Force force) {
+        System.out.println("Retreaters pursuit");
         int imprisoned = 0;
 
         double pursuitCharge = 0;
@@ -537,10 +550,10 @@ public class Fight {
             blackStrength = 0;
 
             for (Unit u : whiteUnits) {
-                u.fire(1);
+                u.fire(1 / scale);
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
-                int casualties = hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u),
-                        randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor));
+                int casualties = hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u) / scale,
+                        randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor) / scale);
                 System.out.println("Unit: " + u.type + "  " + u.nation + " " + u + " White casualties: " + casualties + " unit morale: " + u.morale
                 + " Random factor = " + randomFactor);
                 whiteCasualties += casualties;
@@ -570,10 +583,10 @@ public class Fight {
                 }
             }
             for (Unit u : blackUnits) {
-                u.fire(1);
+                u.fire(1 / scale);
                 double randomFactor = 0.7 + 0.6 * random.nextDouble();
-                int casualties = hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u),
-                        randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor));
+                int casualties = hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u) / scale,
+                        randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor) / scale);
                 System.out.println("Unit: " + u.type + " " + u.nation + " " + u + " Black casualties: " + casualties + " Unit morale: " + u.morale
                 + " Random factor = " + randomFactor);
                 blackCasualties += casualties;
@@ -641,14 +654,74 @@ public class Fight {
             }
 
             //Retreating phase
+            Array<Force> whiteRetreaters = new Array<Force>();
+            for (Map.Entry<Force, Integer> set: white.entrySet()) {
+                Force force = set.getKey();
+                if (force.strength == 0) {
+                    force.disappear();
+                }
+                else {
+                    if (force.strength <= force.order.retreatLevel * set.getValue()) {
+                        whiteRetreaters.add(force);
+                    }
+                }
+            }
+            if (whiteRetreaters.size == white.size()) winner = -1;
 
+            Array<Force> blackRetreaters = new Array<Force>();
+            for (Map.Entry<Force, Integer> set: black.entrySet()) {
+                Force force = set.getKey();
+                if (force.strength == 0) {
+                    force.disappear();
+                }
+                else {
+                    if (force.strength <= force.order.retreatLevel * set.getValue()) {
+                        blackRetreaters.add(force);
+                    }
+                }
+            }
+            if (blackRetreaters.size == black.size()) {
+                if (winner == 0) winner = 1;
+                else {
+                    if (whiteStrength > blackStrength) winner = 1;
+                }
+            }
+
+            if (winner == 1) {
+                isOver = true;
+                for (Force force: blackRetreaters) {
+                    force.retreat();
+                    pursuitRetreaters(force);
+                }
+            }
+
+            if (winner == -1) {
+                isOver = true;
+                for (Force force: whiteRetreaters) {
+                    force.retreat();
+                    pursuitRetreaters(force);
+                }
+            }
+
+            if (winner == 0) {
+                for (Force force: blackRetreaters) {
+                    force.retreat();
+                    pursuitRetreaters(force);
+                }
+                for (Force force: whiteRetreaters) {
+                    force.retreat();
+                    pursuitRetreaters(force);
+                }
+            }
         }
         return winner;
 
     }
 
     public void resolve() {
-        resolveStage();
+
+        while (!isOver) resolveStage();
+
         double whiteAmmo = 0;
         for (Force w : hex.whiteForces) {
             whiteAmmo += w.ammoStock;
@@ -658,6 +731,7 @@ public class Fight {
         for (Force b : hex.blackForces) {
             blackAmmo += b.ammoStock;
         }
+        System.out.println("WINNER =" + winner + ", NUMBER OF STAGES = " + stage);
         System.out.println("WHITE: " + whiteUnits + " strength - " + whiteStrength + " casualties - " + whiteCasualties +
                 " imprisoned - " + whiteImprisoned + " routed - " + (whiteDisordered - whiteImprisoned) + " ammo stock - " + whiteAmmo);
         for (Force f : hex.whiteForces) System.out.println(f + " Morale - " + f.morale);
@@ -679,6 +753,8 @@ public class Fight {
         int out = unit.strength;
         int casualties = in - out;
         if (unit.strength <= MIN_SOLDIERS) {
+            if (!unit.isSub && unit.nation.color == WHITE) white.remove(unit);
+            if (!unit.isSub && unit.nation.color == BLACK) black.remove(unit);
             unit.surrender();
         }
         else {

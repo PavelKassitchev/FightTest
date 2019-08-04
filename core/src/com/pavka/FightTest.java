@@ -80,12 +80,14 @@ public class FightTest {
             Fight fight = hex.startFight();
 
             //Battle battle = new Battle(force1, force2);
-            fight.resolveStage();
+            fight.resolve();
 
-            if (att.morale > def.morale) a++;
+            /*if (att.morale > def.morale) a++;
             else if (att.morale < def.morale) d++;
 
-            else n++;
+            else n++;*/
+            if(fight.winner == 1) a++;
+            else d++;
         }
         System.out.println("White wins = " + a + " Black wins = " + d + " Vague " + n);
     }
@@ -110,11 +112,14 @@ public class FightTest {
             //Battle battle = new Battle(force1, force2);
             fight.resolve();
 
-            if (att.morale > def.morale) a++;
+            /*if (att.morale > def.morale) a++;
             else
             if (att.morale < def.morale) d++;
 
-            else n++;
+            else n++;*/
+            if(fight.winner == 1) a++;
+            else d++;
+            //fight = null;
         }
 
         System.out.println("White wins = " + a + " Black wins = " + d + " Vague " + n);
@@ -131,7 +136,7 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(1, 0, 0, 0, 0, 40);
+        getStat(1, 0, 0, 0, 1, 0);
 
     }
 
