@@ -72,4 +72,5 @@ public class Fighting {
     Random random;
     boolean isOver;
 
+
 }
