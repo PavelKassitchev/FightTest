@@ -905,8 +905,8 @@ public class Force extends Image {
 
     public void disappear() {
 
-        hex.eliminate(this);
         if (isSub) superForce.detach(this);
+        hex.eliminate(this);
         if (play != null) {
             if (nation == FRANCE) {
                 play.whiteTroops.removeValue(this, true);
