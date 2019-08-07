@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import static com.pavka.Nation.WHITE;
 import static com.pavka.Unit.*;
@@ -118,6 +119,10 @@ public class Fighting {
         blackSquadrons = 0;
         blackBatteries = 0;
         blackWagons = 0;
+        whiteFronts = new HashSet<Direction>();
+        blackFronts = new HashSet<Direction>();
+        whiteUnits = new HashSet<Unit>();
+        blackUnits = new HashSet<Unit>();
     }
 
     private void addUnitToFight(Unit u) {
@@ -168,6 +173,7 @@ public class Fighting {
             }
             else {
                 if (!white.containsKey(f)) white.put(f, f.strength);
+                //TODO check back hex property
                 if (f.order.frontDirection != null) {
                     Direction d = f.order.frontDirection;
                     if (whiteFronts.isEmpty()) {
@@ -251,5 +257,43 @@ public class Fighting {
             for (Force force: blackBroken) blackImprisoned += force.surrender();
         }
 
+        if (white.isEmpty()) {
+            winner = -1;
+            isOver = true;
+        }
+        if (black.isEmpty()) {
+            winner = 1;
+            isOver = true;
+        }
+
+    }
+
+    public void fight() {
+        if (!isOver) {
+            double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
+
+        }
+
+    }
+
+    private Force getEnemyRandomForce(Force force) {
+        Set<Force> enemy = null;
+        enemy = force.nation.color == WHITE ? black.keySet() : white.keySet();
+        if (!enemy.isEmpty()) {
+            int num = (int) (Math.random() * enemy.size());
+            for (Force f : enemy) {
+                if (--num < 0) return f;
+            }
+        }
+        return null;
+    }
+    private boolean onlyWhiteBatteries() {
+        return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && (blackBattalions > 0 || blackSquadrons > 0));
+    }
+    private boolean onlyBlackBatteries() {
+        return (blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0 && (whiteBattalions > 0 || whiteSquadrons > 0));
+    }
+    private boolean onlyBatteries() {
+        return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0);
     }
 }
