@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import static com.pavka.Nation.BLACK;
 import static com.pavka.Nation.WHITE;
 import static com.pavka.Unit.*;
 import static com.pavka.Unit.ARTILLERY;
@@ -272,8 +273,147 @@ public class Fighting {
         if (!isOver) {
             double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
 
+            double fireOnBlack = FIRE_ON_UNIT * whiteFire / blackStrength;
+            //System.out.println("Fire on black " + fireOnBlack);
+            double fireOnWhite = FIRE_ON_UNIT * blackFire / whiteStrength;
+            //System.out.println("Fire on white " + fireOnWhite);
+            double chargeOnBlack = -(CHARGE_ON_ENEMY * whiteCharge / blackStrength);
+            //System.out.println("Charge on black " + chargeOnBlack);
+            double chargeOnWhite = -(CHARGE_ON_ENEMY * blackCharge / whiteStrength);
+
+            for (Unit u: whiteUnits) {
+                u.fire(1/scale);
+                double randomFactor = 0.7 + 0.6 * random.nextDouble();
+                int casualties = hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u) / scale,
+                        randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor) / scale);
+                whiteCasualties += casualties;
+                if (u != null && (u.morale < MIN_MORALE) || u.strength <= MIN_SOLDIERS) {
+                    whiteRouted.add(u);
+                    u.isDisordered = true;
+                    whiteDisordered += u.strength;
+                    Unit enemy = getEnemyRandomForce(u).selectRandomUnit();
+                    if (enemy != null) {
+                        enemy.changeMorale(MORALE_BONUS);
+                    }
+                    if (u.isSub) {
+                        for (Force force : u.superForce.forces) {
+                            if (force.isUnit && force != u) {
+                                ((Unit) force).changeMorale(MORALE_PENALTY);
+                                if (force.morale <= MIN_MORALE) {
+                                    whiteRouted.add((Unit) force);
+                                    ((Unit) force).isDisordered = true;
+                                    Unit e = getEnemyRandomForce(force).selectRandomUnit();
+                                    if (e != null) {
+                                        e.changeMorale(SMALL_MORALE_BONUS);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            for (Unit u : blackUnits) {
+                u.fire(1 / scale);
+                double randomFactor = 0.7 + 0.6 * random.nextDouble();
+                int casualties = hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u) / scale,
+                        randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor) / scale);
+                blackCasualties += casualties;
+                if (u != null && u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
+                    blackRouted.add(u);
+                    u.isDisordered = true;
+                    blackDisordered += u.strength;
+                    Unit enemy = getEnemyRandomForce(u).selectRandomUnit();
+                    if (enemy != null) {
+                        enemy.changeMorale(MORALE_BONUS);
+                    }
+                    if (u.isSub) {
+                        for (Force force : u.superForce.forces) {
+                            if (force.isUnit && force != u) {
+                                ((Unit) force).changeMorale(MORALE_PENALTY);
+                                if (force.morale <= MIN_MORALE) {
+                                    blackRouted.add((Unit) force);
+                                    ((Unit) force).isDisordered = true;
+                                    Unit e = getEnemyRandomForce(force).selectRandomUnit();
+                                    if (e != null) {
+                                        e.changeMorale(SMALL_MORALE_BONUS);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (Unit unit : whiteRouted) {
+                if (unit.isDisordered) {
+                    if (!unit.isSub) white.remove(unit);
+                    whiteUnits.remove(unit);
+                    int imprisoned  = pursuit((unit));
+                    whiteImprisoned += imprisoned;
+                    whiteDisordered -= imprisoned;
+                    if (unit.strength <= MIN_SOLDIERS) {
+                        int s = unit.surrender();
+                        whiteImprisoned += s;
+                        whiteDisordered -= s;
+
+                    }
+                    if (unit != null) {
+                        unit.isDisordered = false;
+                        unit.route();
+                    }
+                }
+            }
+
+            for (Unit unit : blackRouted) {
+                if (unit.isDisordered) {
+                    if (!unit.isSub) black.remove(unit);
+                    blackUnits.remove(unit);
+                    int imprisoned  = pursuit((unit));
+                    blackImprisoned += imprisoned;
+                    blackDisordered -= imprisoned;
+                    if (unit.strength <= MIN_SOLDIERS) {
+                        int s = unit.surrender();
+                        blackImprisoned += s;
+                        blackDisordered -= s;
+                    }
+                    if (unit != null) {
+                        unit.isDisordered = false;
+                        unit.route();
+                    }
+                }
+            }
+
         }
 
+    }
+
+    private int pursuit(Unit unit) {
+        int prisoners = 0;
+        int catching = 0;
+        double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
+        if (unit.nation.color == WHITE) {
+            catching = (int) (PURSUIT_CHARGE * blackCharge * (1 - circlingFactor) * unit.strength / whiteStrength);
+            if (unit.type == ARTILLERY) catching *= PURSUIT_ARTILLERY_FACTOR;
+            if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
+            if (catching >= unit.strength) {
+                prisoners += unit.surrender();
+            } else {
+                double ratio = catching / unit.strength;
+                prisoners += unit.bearLoss(ratio);
+            }
+        }
+        if (unit.nation.color == BLACK) {
+            catching = (int) (PURSUIT_CHARGE * whiteCharge * (1 + circlingFactor) * unit.strength / blackStrength);
+            if (unit.type == ARTILLERY) catching *= PURSUIT_ARTILLERY_FACTOR;
+            if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
+            if (catching >= unit.strength) {
+                prisoners += unit.surrender();
+            } else {
+                double ratio = catching / unit.strength;
+                prisoners += unit.bearLoss(ratio);
+            }
+        }
+        return prisoners;
     }
 
     private Force getEnemyRandomForce(Force force) {
@@ -296,4 +436,32 @@ public class Fighting {
     private boolean onlyBatteries() {
         return (whiteBatteries > 0 && whiteBattalions == 0 && whiteSquadrons == 0 && blackBatteries > 0 && blackBattalions == 0 && blackSquadrons == 0);
     }
+
+    private int firing(Unit unit, double fire) {
+        int in = unit.strength;
+        double f = fire;
+        if (unit.type == ARTILLERY) {
+            f *= FIRE_ON_ARTILLERY;
+        }
+        unit.bearLoss(f);
+        int out = unit.strength;
+        int casualties = in - out;
+        unit.changeMorale(-(CASUALITY_INTO_MORALE) * f);
+
+        return casualties;
+    }
+    private void charging(Unit unit, double charge) {
+        double c = charge;
+        if (unit.type == ARTILLERY) c *= CHARGE_ON_ARTILLERY;
+        if (unit.type == CAVALRY) c *= CHARGE_ON_CAVALRY;
+        unit.changeMorale(c);
+    }
+
+    private int hitUnit(Unit unit, double fire, double charge) {
+
+        charging(unit, charge);
+        return firing(unit, fire);
+
+    }
+
 }
