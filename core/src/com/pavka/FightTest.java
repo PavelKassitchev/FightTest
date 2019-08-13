@@ -66,6 +66,8 @@ public class FightTest {
         int a = 0;
         int d = 0;
         int n = 0;
+        int whiteKilled = 0;
+        int blackKilled = 0;
 
         for (int i = 0; i < 1000; i++) {
             Hex hex = new Hex();
@@ -77,7 +79,8 @@ public class FightTest {
             //hex.blackForces.add(def);
 
 
-            Fight fight = hex.startFight();
+            //Fight fight = hex.startFight();
+            Fighting fight = hex.startFighting();
 
             //Battle battle = new Battle(force1, force2);
             fight.resolve();
@@ -87,9 +90,13 @@ public class FightTest {
 
             else n++;*/
             if(fight.winner == 1) a++;
-            else d++;
+            else if (fight.winner == -1) d++;
+            else n++;
+            whiteKilled += fight.whiteImprisoned;
+            blackKilled += fight.blackImprisoned;
         }
         System.out.println("White wins = " + a + " Black wins = " + d + " Vague " + n);
+        System.out.println("white killed: " + whiteKilled + " black killed: " + blackKilled);
     }
 
     public static void getStat(Force attacker, Force defender) {
@@ -118,7 +125,7 @@ public class FightTest {
 
             else n++;*/
             if(fight.winner == 1) a++;
-            else d++;
+            if (fight.winner == -1) d++;
             //fight = null;
         }
 
@@ -127,7 +134,15 @@ public class FightTest {
 
     public static void main(String[] args) {
         /*Force france = new Battalion(FRANCE, hex);
-        Force austria = new Battery(AUSTRIA, hex);
+        Force france1 = new Battalion(FRANCE, hex);
+        Force france2 = new Battalion(FRANCE, hex);
+        Force austria = new Force(AUSTRIA, hex);
+        austria.attach(new Battalion(AUSTRIA, hex));
+        austria.attach(new Battalion(AUSTRIA, hex));
+        austria.attach(new Battalion(AUSTRIA, hex));
+        Fighting fight = hex.startFighting();
+        fight.resolve();*/
+        /*Force austria = new Battery(AUSTRIA, hex);
         Force f = new Battalion(FRANCE, hex);
         Force a = new Squadron(AUSTRIA, hex);
         france.attach(f);
@@ -136,7 +151,7 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(1, 0, 0, 0, 1, 0);
+        getStat(12, 0, 1, 12, 0, 1);
 
     }
 

@@ -26,6 +26,7 @@ public class Hex extends Image {
     public Array<Force> blackForces;
     public final static int SIZE = 10;
     public Fight fight;
+    public Fighting fighting;
 
 
     //static Texture texture = new Texture("symbols/Blue.png");
@@ -75,6 +76,12 @@ public class Hex extends Image {
 
         fight = new Fight(this);
         return fight;
+    }
+
+    public Fighting startFighting() {
+
+        fighting = new Fighting(this);
+        return fighting;
     }
 
     public double getFireFactor(Unit unit) {

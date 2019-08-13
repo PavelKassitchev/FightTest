@@ -96,6 +96,7 @@ public class Fight {
     force.formerSuper = force.superForce; added to Force.detach()
     Hex.clean() added
     Unit.bearLosses returns int
+    Hex.startFighting added
 
      */
 

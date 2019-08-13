@@ -150,7 +150,7 @@ public class Force extends Image {
 
     @Override
     public String toString() {
-        return name + " men: " + strength;
+        return name + " men: " + strength + " morale: " + morale;
     }
 
     public void retreat() {
