@@ -151,7 +151,41 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(12, 0, 1, 12, 0, 1);
+        //getStat(12, 2, 4, 12, 2, 4);
+        createDivision(FRANCE);
+        createDivision(AUSTRIA);
+        Fighting fight = hex.startFighting();
+        fight.resolve();
+
+    }
+
+    private static void createDivision (Nation nation) {
+        Unit battalion1 = new Battalion(nation, hex);
+        Unit battalion2 = new Battalion(nation, hex);
+        Unit battalion3 = new Battalion(nation, hex);
+        Unit battalion4 = new Battalion(nation, hex);
+        Unit battalion5 = new Battalion(nation, hex);
+        Unit battalion6 = new Battalion(nation, hex);
+        Unit battalion7 = new Battalion(nation, hex);
+        Unit battalion8 = new Battalion(nation, hex);
+        Unit battalion9 = new Battalion(nation, hex);
+        Unit battalion10 = new Battalion(nation, hex);
+        Unit battalion11 = new Battalion(nation, hex);
+        Unit battalion12 = new Battalion(nation, hex);
+        Force regiment1 = new Force(battalion1, battalion2, battalion3);
+        Force regiment2 = new Force(battalion4, battalion5, battalion6);
+        Force regiment3 = new Force(battalion7, battalion8, battalion9);
+        Force regiment4 = new Force(battalion10, battalion11, battalion12);
+        Force brigade1 = new Force(regiment1, regiment2);
+        Force brigade2 = new Force(regiment3, regiment4);
+        Unit squadron1 = new Squadron(nation, hex);
+        Unit squadron2 = new Squadron(nation, hex);
+        Unit battery1 = new Battery(nation, hex);
+        Unit battery2 = new Battery(nation, hex);
+        Unit battery3 = new Battery(nation, hex);
+        Unit battery4 = new Battery(nation, hex);
+        Force artDivision = new Force(battery1, battery2, battery3, battery4);
+        Force division = new Force(brigade1, brigade2, artDivision, squadron1, squadron2);
 
     }
 

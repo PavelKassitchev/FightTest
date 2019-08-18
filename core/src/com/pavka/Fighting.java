@@ -330,7 +330,7 @@ public class Fighting {
 
             for (Unit u : whiteUnits) {
                 u.fire(1 / scale);
-                double randomFactor = 0.7 + 0.6 * random.nextDouble();
+                double randomFactor = 0.65 + 0.7 * random.nextDouble();
                 //double randomFactor = 1;
                 System.out.println(randomFactor + " random");
                 int casualties = hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u) / scale,
@@ -370,7 +370,7 @@ public class Fighting {
             }
             for (Unit u : blackUnits) {
                 u.fire(1 / scale);
-                double randomFactor = 0.7 + 0.6 * random.nextDouble();
+                double randomFactor = 0.65 + 0.7 * random.nextDouble();
                 //double randomFactor = 1;
                 System.out.println(randomFactor + " random");
                 int casualties = hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u) / scale,
