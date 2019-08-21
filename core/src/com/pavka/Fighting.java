@@ -166,7 +166,7 @@ public class Fighting {
     public void init() {
         scale = 1;
 
-        System.out.println("INIT. Stage " + stage);
+        //System.out.println("INIT. Stage " + stage);
         System.out.println();
 
         boolean whiteAdvantage = whiteStrength > blackStrength;
@@ -292,24 +292,19 @@ public class Fighting {
             isOver = true;
             winner = 1;
         }
-        System.out.println("NUMBER OF STAGE: " + stage);
+        System.out.println("INIT. NUMBER OF STAGE: " + stage);
         System.out.println();
         System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
+        System.out.println("White Units Length = " + whiteUnits.size());
 
         System.out.println();
         System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
-
+        System.out.println("Black Units Length = " + blackUnits.size());
         System.out.println();
 
     }
 
     public void fight() {
-        System.out.println("FIGHT. STAGE " + stage);
-        System.out.println("White Unit: " + whiteUnits);
-        System.out.println("White: " + white);
-        System.out.println("Black Unit: " + blackUnits);
-        System.out.println("Black: " + black);
-        System.out.println();
 
         if (!isOver) {
             int w = 0;
@@ -332,10 +327,10 @@ public class Fighting {
                 u.fire(1 / scale);
                 double randomFactor = 0.65 + 0.7 * random.nextDouble();
                 //double randomFactor = 1;
-                System.out.println(randomFactor + " random");
+                //System.out.println(randomFactor + " random");
                 int casualties = hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u) / scale,
                         randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor) / scale);
-                System.out.println("White casualties: " + casualties + " morale: " + u.morale);
+                //System.out.println("White casualties: " + casualties + " morale: " + u.morale);
                 whiteCasualties += casualties;
                 if (u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
                     if (whiteShaken.add(u)) {
@@ -372,10 +367,10 @@ public class Fighting {
                 u.fire(1 / scale);
                 double randomFactor = 0.65 + 0.7 * random.nextDouble();
                 //double randomFactor = 1;
-                System.out.println(randomFactor + " random");
+                //System.out.println(randomFactor + " random");
                 int casualties = hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u) / scale,
                         randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor) / scale);
-                System.out.println("Black casualties: " + casualties + " morale: " + u.morale);
+                //System.out.println("Black casualties: " + casualties + " morale: " + u.morale);
                 blackCasualties += casualties;
                 if (u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
                     if (blackShaken.add(u)) {
@@ -485,17 +480,18 @@ public class Fighting {
                 isOver = true;
             }
         }
+        System.out.println("FIGHT. STAGE " + stage);
+        System.out.println("White Unit Length: " + whiteUnits.size() + " Units: " + whiteUnits);
+        System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
+        System.out.println("White: " + white);
+        System.out.println("Black Unit Length: " + blackUnits.size() + " Units: " + blackUnits);
+        System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
+        System.out.println("Black: " + black);
+        System.out.println();
 
     }
 
     public void checkRetreat() {
-        System.out.println("CHECK. STAGE " + stage);
-        System.out.println("White Unit: " + whiteUnits);
-        System.out.println("White: " + white);
-        System.out.println("Black Unit: " + blackUnits);
-        System.out.println("Black: " + black);
-        System.out.println();
-
         HashSet<Force> whiteToRetreat = new HashSet<Force>();
         HashSet<Force> blackToRetreat = new HashSet<Force>();
 
@@ -619,6 +615,14 @@ public class Fighting {
             }
 
         }
+        System.out.println("CHECK. STAGE " + stage);
+        System.out.println("White Unit Length: " + whiteUnits.size() + " Units: " + whiteUnits);
+        System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
+        System.out.println("White: " + white);
+        System.out.println("Black Unit Length: " + blackUnits.size() + " Units: " + blackUnits);
+        System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
+        System.out.println("Black: " + black);
+        System.out.println();
     }
 
     public void obtainVictoryBonus() {

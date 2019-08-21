@@ -108,6 +108,7 @@ public abstract class Unit extends Force {
     public void route() {
         if (isSub) superForce.detach(this);
         //TODO
+        hex.eliminate(this);
     }
 
     public double fire(double ratio) {
