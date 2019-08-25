@@ -600,17 +600,36 @@ public class Fighting {
             if (whiteLosing && !blackLosing) {
                 winner = -1;
                 isOver = true;
-                for (Force force: white.keySet()) {
-                    whiteRetreaters.add(force);
-                    whiteImprisoned += pursuitRetreaters(force);
+                //for (Force force: white.keySet()) {
+                    //whiteRetreaters.add(force);
+                    //whiteImprisoned += pursuitRetreaters(force);
+                 for(Unit u: whiteUnits){
+                     u.isDisordered = false;
+                     whiteRouted.add(u);
+                     Force f = u.superForce;
+                     u.route();
+                     whiteImprisoned += pursuit(u);
+                     whiteDisordered += u.strength;
+                     f.surrender();
+                     white.remove(f);
+
                 }
             }
             if (!whiteLosing && blackLosing) {
                 winner = 1;
                 isOver = true;
-                for (Force force: black.keySet()) {
-                    blackRetreaters.add(force);
-                    blackImprisoned += pursuitRetreaters(force);
+                //for (Force force: black.keySet()) {
+                    //blackRetreaters.add(force);
+                    //blackImprisoned += pursuitRetreaters(force);
+                for(Unit u: blackUnits) {
+                    u.isDisordered = false;
+                    blackRouted.add(u);
+                    Force f = u.superForce;
+                    u.route();
+                    blackImprisoned += pursuit(u);
+                    blackDisordered += u.strength;
+                    f.surrender();
+                    black.remove(f);
                 }
             }
             if (whiteLosing && blackLosing) {
