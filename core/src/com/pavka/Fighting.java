@@ -14,7 +14,7 @@ public class Fighting {
     public static final double CASUALITY_INTO_MORALE = 3.3;
     public static final int CHARGE_ON_ENEMY = 30;
     public static final int PURSUIT_CHARGE = 45;
-    public static final int PURSUIT_ON_RETREATER = 25;
+    public static final int PURSUIT_ON_RETREATER = 30;
     public static final double PURSUIT_ARTILLERY_FACTOR = 1.5;
     public static final double PURSUIT_CAVALRY_FACTOR = 0.5;
     public static final int MIN_SOLDIERS = 6;
@@ -181,7 +181,7 @@ public class Fighting {
         Direction blackInitDirection = null;
 
         for (Force f : hex.whiteForces) {
-            if (blackAdvantage && f.morale < 0) {
+            if (blackAdvantage && f.morale <= 0) {
                 whiteBroken.add(f);
             } else {
                 if (!white.containsKey(f)) white.put(f, f.strength);
@@ -222,7 +222,7 @@ public class Fighting {
         }
 
         for (Force f : hex.blackForces) {
-            if (whiteAdvantage && f.morale < 0) {
+            if (whiteAdvantage && f.morale <= 0) {
                 blackBroken.add(f);
             } else {
                 if (!black.containsKey(f)) black.put(f, f.strength);
@@ -294,12 +294,15 @@ public class Fighting {
         }
         System.out.println("INIT. NUMBER OF STAGE: " + stage);
         System.out.println();
-        System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
+        System.out.println("WHITE: current strength - " + whiteStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
         System.out.println("White Units Length = " + whiteUnits.size());
+        System.out.println("White Fire = " + whiteFire + " WhiteCharge = " + whiteCharge);
 
         System.out.println();
-        System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
+        System.out.println("BLACK: current strength - " + blackStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
         System.out.println("Black Units Length = " + blackUnits.size());
+        System.out.println("Black Fire = " + blackFire + " Black Charge = " + blackCharge);
+
         System.out.println();
 
     }
@@ -312,6 +315,7 @@ public class Fighting {
             HashSet<Unit> whiteShaken = new HashSet<Unit>();
             HashSet<Unit> blackShaken = new HashSet<Unit>();
 
+
             double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
             //System.out.println("Circling: " + circlingFactor + " Stage: " + stage);
             double fireOnBlack = FIRE_ON_UNIT * whiteFire / blackStrength;
@@ -323,7 +327,14 @@ public class Fighting {
             double chargeOnWhite = -(CHARGE_ON_ENEMY * blackCharge / whiteStrength);
             //System.out.println("Charge on white " + chargeOnWhite);
 
-            for (Unit u : whiteUnits) {
+            int min = Math.min(whiteUnits.size(), blackUnits.size());
+            if (min == 0) min = 1;
+            int whiteStep = whiteUnits.size() / min;
+            int blackStep = blackUnits.size() / min;
+
+            //for (Unit u : whiteUnits) {
+            for (int i=0; i<whiteStep; i++) {
+                Unit u = getRandomForce(WHITE).selectRandomUnit();
                 u.fire(1 / scale);
                 double randomFactor = 0.65 + 0.7 * random.nextDouble();
                 //double randomFactor = 1;
@@ -337,6 +348,7 @@ public class Fighting {
                         //whiteDisordered += u.strength;
                         w++;
                         u.isDisordered = true;
+                        System.out.println("White unit BROKEN: " + u.strength);
                     }
                     /*Unit enemy = getEnemyRandomForce(u).selectRandomUnit();
                     if (enemy != null) {
@@ -351,6 +363,7 @@ public class Fighting {
                                         //whiteDisordered += u.strength;
                                         w++;
                                         ((Unit) force).isDisordered = true;
+                                        System.out.println("White Unit broken");
                                     }
                                     //whiteDisordered += force.strength;
                                     /*Unit e = getEnemyRandomForce(force).selectRandomUnit();
@@ -363,7 +376,9 @@ public class Fighting {
                     }
                 }
             }
-            for (Unit u : blackUnits) {
+            //for (Unit u : blackUnits) {
+            for (int i=0; i<blackStep; i++) {
+                Unit u = getRandomForce(BLACK).selectRandomUnit();
                 u.fire(1 / scale);
                 double randomFactor = 0.65 + 0.7 * random.nextDouble();
                 //double randomFactor = 1;
@@ -377,6 +392,7 @@ public class Fighting {
                         //blackDisordered += u.strength;
                         b++;
                         u.isDisordered = true;
+                        System.out.println("Black unit BROKEN: " + u.strength);
                     }
 
                     /*Unit enemy = getEnemyRandomForce(u).selectRandomUnit();
@@ -392,6 +408,7 @@ public class Fighting {
                                         //blackDisordered += u.strength;
                                         b++;
                                         ((Unit) force).isDisordered = true;
+                                        System.out.println("Black Unit broken");
                                     }
                                     //blackDisordered += force.strength;
                                     /*Unit e = getEnemyRandomForce(force).selectRandomUnit();
@@ -460,11 +477,17 @@ public class Fighting {
                     } else blackLosing = true;
                 }
             }
+
+            whiteStrength = 0;
+            blackStrength = 0;
+
             for (Force force : hex.whiteForces) {
                 if (force.strength == 0) white.remove(force);
+                else whiteStrength += force.strength;
             }
             for (Force force : hex.blackForces) {
                 if (force.strength == 0) black.remove(force);
+                else blackStrength += force.strength;
             }
 
             if (whiteUnits.isEmpty() && !blackUnits.isEmpty()) {
@@ -495,7 +518,6 @@ public class Fighting {
         HashSet<Force> whiteToRetreat = new HashSet<Force>();
         HashSet<Force> blackToRetreat = new HashSet<Force>();
 
-
         if (!whiteLosing && !blackLosing) {
 
             for (Map.Entry<Force, Integer> set : white.entrySet()) {
@@ -505,6 +527,7 @@ public class Fighting {
                     whiteToRetreat.add(force);
                 }
             }
+
             for (Map.Entry<Force, Integer> set : black.entrySet()) {
                 Force force = set.getKey();
                 if (force.strength <= force.order.retreatLevel * set.getValue()) {
@@ -618,9 +641,12 @@ public class Fighting {
         System.out.println("CHECK. STAGE " + stage);
         System.out.println("White Unit Length: " + whiteUnits.size() + " Units: " + whiteUnits);
         System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
+        System.out.println("White Broken = " + whiteDisordered + " Retreated = " + whiteToRetreat);
         System.out.println("White: " + white);
+        System.out.println();
         System.out.println("Black Unit Length: " + blackUnits.size() + " Units: " + blackUnits);
         System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
+        System.out.println("Black Broken = " + blackDisordered + " Retreated = " + blackToRetreat);
         System.out.println("Black: " + black);
         System.out.println();
     }
@@ -676,7 +702,8 @@ public class Fighting {
         int imprisoned = 0;
         double pursuitCharge = 0;
         if (force.nation.color == WHITE) {
-            pursuitCharge = blackCharge * force.strength / whiteStrength - force.charge;
+
+            pursuitCharge = (blackCharge * force.strength / whiteStrength - force.charge) * (1 + blackDirectionBonus);
             if (pursuitCharge > 0) {
                 int prisoners = (int) (pursuitCharge * PURSUIT_ON_RETREATER);
                 if (prisoners > force.strength) {
@@ -720,7 +747,7 @@ public class Fighting {
             }
         }
         if (force.nation.color == BLACK) {
-            pursuitCharge = whiteCharge * force.strength / blackStrength - force.charge;
+            pursuitCharge = (whiteCharge * force.strength / blackStrength - force.charge) * (1 + whiteDirectionBonus);
             if (pursuitCharge > 0) {
                 int prisoners = (int) (pursuitCharge * PURSUIT_ON_RETREATER);
                 if (prisoners > force.strength) {
@@ -767,9 +794,9 @@ public class Fighting {
     private int pursuit(Unit unit) {
         int prisoners = 0;
         int catching = 0;
-        double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
+        //double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
         if (unit.nation.color == WHITE) {
-            catching = (int) (PURSUIT_CHARGE * blackCharge * (1 - circlingFactor) * unit.strength / whiteStrength);
+            catching = (int) (PURSUIT_CHARGE * blackCharge * (1 + blackDirectionBonus) * unit.strength / whiteStrength);
             if (unit.type == ARTILLERY) catching *= PURSUIT_ARTILLERY_FACTOR;
             if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
             if (catching >= unit.strength) {
@@ -780,7 +807,7 @@ public class Fighting {
             }
         }
         if (unit.nation.color == BLACK) {
-            catching = (int) (PURSUIT_CHARGE * whiteCharge * (1 + circlingFactor) * unit.strength / blackStrength);
+            catching = (int) (PURSUIT_CHARGE * whiteCharge * (1 + whiteDirectionBonus) * unit.strength / blackStrength);
             if (unit.type == ARTILLERY) catching *= PURSUIT_ARTILLERY_FACTOR;
             if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
             if (catching >= unit.strength) {

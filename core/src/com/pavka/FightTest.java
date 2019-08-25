@@ -39,7 +39,7 @@ public class FightTest {
         int b = 1;
         int s = 1;
         int y = 1;
-        Hex hex = new Hex();
+        //Hex hex = new Hex();
         Force force = new Force(nation, hex);
         force.name = "Corps " + nation;
         for (int count = 0; count < i; count++) {
@@ -151,15 +151,22 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        //getStat(12, 2, 4, 12, 2, 4);
-        createDivision(FRANCE);
-        createDivision(AUSTRIA);
+        //getStat(2, 0, 0, 0, 7, 0);
+        Force f = createDivision(FRANCE);
+        Force a = createDivision(AUSTRIA);
+        /*Force a = createForce(AUSTRIA, 11, 3, 4);
+        f.order.frontDirection = NORTHEAST;
+        a.order.frontDirection = SOUTHWEST;
+        Force a1 = new Battalion(AUSTRIA, hex);
+        a1.order.frontDirection = SOUTHEAST;
+        Force a2 = new Squadron(AUSTRIA, hex);
+        a2.order.frontDirection = NORTHEAST;*/
         Fighting fight = hex.startFighting();
         fight.resolve();
 
     }
 
-    private static void createDivision (Nation nation) {
+    private static Force createDivision (Nation nation) {
         Unit battalion1 = new Battalion(nation, hex);
         Unit battalion2 = new Battalion(nation, hex);
         Unit battalion3 = new Battalion(nation, hex);
@@ -180,12 +187,16 @@ public class FightTest {
         Force brigade2 = new Force(regiment3, regiment4);
         Unit squadron1 = new Squadron(nation, hex);
         Unit squadron2 = new Squadron(nation, hex);
+        Unit squadron3 = new Squadron(nation, hex);
+        Unit squadron4 = new Squadron(nation, hex);
         Unit battery1 = new Battery(nation, hex);
         Unit battery2 = new Battery(nation, hex);
         Unit battery3 = new Battery(nation, hex);
         Unit battery4 = new Battery(nation, hex);
         Force artDivision = new Force(battery1, battery2, battery3, battery4);
-        Force division = new Force(brigade1, brigade2, artDivision, squadron1, squadron2);
+        Force division = new Force(brigade1, brigade2, artDivision, squadron1, squadron2, squadron3, squadron4);
+
+        return division;
 
     }
 

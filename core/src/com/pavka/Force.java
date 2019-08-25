@@ -203,7 +203,7 @@ public class Force extends Image {
         wagons = new ArrayList<Wagon>();
         trace = new Trace();
         trace.add(hex);
-        order = new Order(false, 0, 0);
+        order = new Order(false, 0.7, 0);
         speed = 100;
         //TODO this should be moved to the constructor with Play
         setTouchable(Touchable.enabled);
