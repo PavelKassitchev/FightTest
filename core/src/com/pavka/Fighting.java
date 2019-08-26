@@ -333,7 +333,7 @@ public class Fighting {
             int blackStep = blackUnits.size() / min;
 
             //for (Unit u : whiteUnits) {
-            for (int i=0; i<whiteStep; i++) {
+            for (int i = 0; i < whiteStep; i++) {
                 Unit u = getRandomForce(WHITE).selectRandomUnit();
                 u.fire(1 / scale);
                 double randomFactor = 0.65 + 0.7 * random.nextDouble();
@@ -377,7 +377,7 @@ public class Fighting {
                 }
             }
             //for (Unit u : blackUnits) {
-            for (int i=0; i<blackStep; i++) {
+            for (int i = 0; i < blackStep; i++) {
                 Unit u = getRandomForce(BLACK).selectRandomUnit();
                 u.fire(1 / scale);
                 double randomFactor = 0.65 + 0.7 * random.nextDouble();
@@ -594,24 +594,22 @@ public class Fighting {
             if (black.isEmpty() && white.isEmpty()) {
                 isOver = true;
             }
-        }
-
-        else {
+        } else {
             if (whiteLosing && !blackLosing) {
                 winner = -1;
                 isOver = true;
                 //for (Force force: white.keySet()) {
-                    //whiteRetreaters.add(force);
-                    //whiteImprisoned += pursuitRetreaters(force);
-                 for(Unit u: whiteUnits){
-                     u.isDisordered = false;
-                     whiteRouted.add(u);
-                     Force f = u.superForce;
-                     u.route();
-                     whiteImprisoned += pursuit(u);
-                     whiteDisordered += u.strength;
-                     f.surrender();
-                     white.remove(f);
+                //whiteRetreaters.add(force);
+                //whiteImprisoned += pursuitRetreaters(force);
+                for (Unit u : whiteUnits) {
+                    u.isDisordered = false;
+                    whiteRouted.add(u);
+                    Force f = u.superForce;
+                    u.route();
+                    whiteImprisoned += pursuit(u);
+                    whiteDisordered += u.strength;
+                    f.surrender();
+                    white.remove(f);
 
                 }
             }
@@ -619,9 +617,9 @@ public class Fighting {
                 winner = 1;
                 isOver = true;
                 //for (Force force: black.keySet()) {
-                    //blackRetreaters.add(force);
-                    //blackImprisoned += pursuitRetreaters(force);
-                for(Unit u: blackUnits) {
+                //blackRetreaters.add(force);
+                //blackImprisoned += pursuitRetreaters(force);
+                for (Unit u : blackUnits) {
                     u.isDisordered = false;
                     blackRouted.add(u);
                     Force f = u.superForce;
@@ -636,20 +634,20 @@ public class Fighting {
                 isOver = true;
                 double whiteMorale = 0;
                 double blackMorale = 0;
-                for (Unit w: whiteUnits) whiteMorale += w.morale;
-                for (Unit b: blackUnits) blackMorale += b.morale;
-                if(whiteMorale > blackMorale) {
+                for (Unit w : whiteUnits) whiteMorale += w.morale;
+                for (Unit b : blackUnits) blackMorale += b.morale;
+                if (whiteMorale > blackMorale) {
                     winner = 1;
 
-                    for (Force force: black.keySet()) {
+                    for (Force force : black.keySet()) {
                         blackRetreaters.add(force);
                         blackImprisoned += pursuitRetreaters(force);
                     }
                 }
-                if(whiteMorale < blackMorale) {
+                if (whiteMorale < blackMorale) {
                     winner = -1;
 
-                    for (Force force: white.keySet()) {
+                    for (Force force : white.keySet()) {
                         whiteRetreaters.add(force);
                         whiteImprisoned += pursuitRetreaters(force);
                     }
@@ -673,11 +671,29 @@ public class Fighting {
     public void obtainVictoryBonus() {
         if (winner == 1) {
             for (Unit unit : whiteUnits) unit.changeMorale(VICTORY_BONUS);
-            for (Unit unit : whiteRouted) unit.changeMorale(SMALL_VICTORY_BONUS);
+            for (Unit unit : whiteRouted) {
+                unit.changeMorale(SMALL_VICTORY_BONUS);
+                if (unit.morale >= 0) {
+                    unit.moveTo(hex);
+                    if (unit.formerSuper != null) {
+                        unit.formerSuper.attach(unit);
+                        whiteDisordered -= unit.strength;
+                    }
+                }
+            }
         }
         if (winner == -1) {
             for (Unit unit : blackUnits) unit.changeMorale(VICTORY_BONUS);
-            for (Unit unit : blackRouted) unit.changeMorale(SMALL_VICTORY_BONUS);
+            for (Unit unit : blackRouted) {
+                unit.changeMorale(SMALL_VICTORY_BONUS);
+                if (unit.morale >= 0) {
+                    unit.moveTo(hex);
+                    if (unit.formerSuper != null) {
+                        unit.formerSuper.attach(unit);
+                        blackDisordered -= unit.strength;
+                    }
+                }
+            }
         }
     }
 

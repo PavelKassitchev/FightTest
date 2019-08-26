@@ -69,7 +69,7 @@ public class FightTest {
         int whiteKilled = 0;
         int blackKilled = 0;
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             Hex hex = new Hex();
             Force att = createForce(hex, FRANCE, fi, fc, fa);
             att.order = new Order(true, 0.7, 0);
@@ -151,9 +151,9 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(1, 0, 0, 0, 4, 0);
-        //Force f = createDivision(FRANCE);
-        //Force a = createDivision(AUSTRIA);
+        //getStat(51, 0, 0, 51, 0, 0);
+        Force f = createDivision(FRANCE);
+        Force a = createDivision(AUSTRIA);
         /*Force a = createForce(AUSTRIA, 11, 3, 4);
         f.order.frontDirection = NORTHEAST;
         a.order.frontDirection = SOUTHWEST;
@@ -161,8 +161,8 @@ public class FightTest {
         a1.order.frontDirection = SOUTHEAST;
         Force a2 = new Squadron(AUSTRIA, hex);
         a2.order.frontDirection = NORTHEAST;*/
-        //Fighting fight = hex.startFighting();
-        //fight.resolve();
+        Fighting fight = hex.startFighting();
+        fight.resolve();
 
     }
 
