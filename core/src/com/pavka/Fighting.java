@@ -13,8 +13,8 @@ public class Fighting {
     public static final int FIRE_ON_UNIT = 40;
     public static final double CASUALITY_INTO_MORALE = 3.3;
     public static final int CHARGE_ON_ENEMY = 30;
-    public static final int PURSUIT_CHARGE = 45;
-    public static final int PURSUIT_ON_RETREATER = 30;
+    public static final int PURSUIT_CHARGE = 50;
+    public static final int PURSUIT_ON_RETREATER = 35;
     public static final double PURSUIT_ARTILLERY_FACTOR = 1.5;
     public static final double PURSUIT_CAVALRY_FACTOR = 0.5;
     public static final int MIN_SOLDIERS = 6;

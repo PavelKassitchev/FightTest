@@ -154,6 +154,13 @@ public class FightTest {
         //getStat(51, 0, 0, 51, 0, 0);
         Force f = createDivision(FRANCE);
         Force a = createDivision(AUSTRIA);
+        Force f1 = createDivision(FRANCE);
+        Force f2 = createDivision(FRANCE);
+        Force a1 = createDivision(AUSTRIA);
+        Force a2 = createDivision(AUSTRIA);
+        Force fCorps = new Force(f, f1, f2);
+        Force aCorps = new Force(a, a1, a2);
+
         /*Force a = createForce(AUSTRIA, 11, 3, 4);
         f.order.frontDirection = NORTHEAST;
         a.order.frontDirection = SOUTHWEST;

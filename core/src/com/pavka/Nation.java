@@ -13,9 +13,9 @@ public enum Nation {
     public int color;
     static
     {
-        FRANCE.nationalMorale = 1;
+        FRANCE.nationalMorale = 1.4f;
         FRANCE.color = WHITE;
-        AUSTRIA.nationalMorale = 1;
+        AUSTRIA.nationalMorale = 1.0f;
         AUSTRIA.color = BLACK;
     }
 
