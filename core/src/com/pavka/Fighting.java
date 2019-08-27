@@ -556,6 +556,7 @@ public class Fighting {
                     whiteRetreaters.add(force);
                     white.remove(force);
                     whiteImprisoned += pursuitRetreaters(force);
+                    System.out.println("White retreaters imprisoned: " + whiteImprisoned);
                 }
             }
             if (whiteToRetreat.size() != white.size() && blackToRetreat.size() == black.size()) {
@@ -683,6 +684,8 @@ public class Fighting {
             for (Force f: whiteRetreaters) f.retreat();
             for (Unit u: whiteRouted) {
                 whiteImprisoned += pursuit(u);
+                System.out.println("White routed and pursuited: " + u.strength);
+                System.out.println("Before: " + whiteDisordered + " imprisoned: " + whiteImprisoned);
                 whiteDisordered += u.strength;
             }
             for (Unit u: blackRouted) blackDisordered += u.strength;
@@ -868,8 +871,10 @@ public class Fighting {
             if (unit.type == CAVALRY) catching *= PURSUIT_CAVALRY_FACTOR;
             if (catching >= unit.strength) {
                 prisoners += unit.surrender();
+                System.out.println("Unit surrended:" + unit.strength);
             } else {
                 double ratio = (double) catching / unit.strength;
+                System.out.println("RATIO - " + ratio);
                 prisoners += unit.bearLoss(ratio);
             }
         }

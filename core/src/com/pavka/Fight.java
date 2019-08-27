@@ -97,6 +97,7 @@ public class Fight {
     Hex.clean() added
     Unit.bearLosses returns int
     Hex.startFighting added
+    Force.dissapear()
 
      */
 
