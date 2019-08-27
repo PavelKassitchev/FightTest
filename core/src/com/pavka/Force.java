@@ -914,8 +914,9 @@ public class Force extends Image {
                 play.blackTroops.removeValue(this, true);
             }
             remove();
-            strength = 0;
+
         }
+        strength = 0;
     }
 }
 
