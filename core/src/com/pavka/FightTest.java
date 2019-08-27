@@ -151,14 +151,16 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        //getStat(51, 0, 0, 51, 0, 0);
-        Force f = createDivision(FRANCE);
+        getStat(5, 0, 0, 5, 0, 0);
+
+        //Corps and divisions
+        /*Force f = createDivision(FRANCE);
         Force a = createDivision(AUSTRIA);
         Force f1 = createDivision(FRANCE);
-        Force f2 = createDivision(FRANCE);
+        //Force f2 = createDivision(FRANCE);
         Force a1 = createDivision(AUSTRIA);
         Force a2 = createDivision(AUSTRIA);
-        Force fCorps = new Force(f, f1, f2);
+        Force fCorps = new Force(f, f1);
         Force aCorps = new Force(a, a1, a2);
 
         /*Force a = createForce(AUSTRIA, 11, 3, 4);
@@ -168,8 +170,8 @@ public class FightTest {
         a1.order.frontDirection = SOUTHEAST;
         Force a2 = new Squadron(AUSTRIA, hex);
         a2.order.frontDirection = NORTHEAST;*/
-        Fighting fight = hex.startFighting();
-        fight.resolve();
+        //Fighting fight = hex.startFighting();
+        //fight.resolve();
 
     }
 

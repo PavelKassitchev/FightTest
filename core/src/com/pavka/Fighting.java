@@ -345,6 +345,9 @@ public class Fighting {
                 whiteCasualties += casualties;
                 if (u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
                     if (whiteShaken.add(u)) {
+                        whiteCasualties += hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u) / scale,
+                                randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor) / scale);
+
                         //whiteDisordered += u.strength;
                         w++;
                         u.isDisordered = true;
@@ -389,6 +392,8 @@ public class Fighting {
                 blackCasualties += casualties;
                 if (u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
                     if (blackShaken.add(u)) {
+                        blackCasualties += hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u) / scale,
+                                randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor) / scale);
                         //blackDisordered += u.strength;
                         b++;
                         u.isDisordered = true;
@@ -437,13 +442,16 @@ public class Fighting {
                         if (!unit.isSub) white.remove(unit);
                         else unit.superForce.detach(unit);
                         whiteUnits.remove(unit);
-                        int imprisoned = pursuit((unit));
+
+                        /*int imprisoned = pursuit((unit));
                         whiteImprisoned += imprisoned;
-                        whiteDisordered += unit.strength;
+                        whiteDisordered += unit.strength;*/
+
                         if (unit.strength <= MIN_SOLDIERS) {
                             int s = unit.surrender();
                             whiteImprisoned += s;
-                            whiteDisordered -= s;
+
+                            /*whiteDisordered -= s;*/
 
                         }
                         if (unit != null) {
@@ -461,13 +469,16 @@ public class Fighting {
                         if (!unit.isSub) black.remove(unit);
                         else unit.superForce.detach(unit);
                         blackUnits.remove(unit);
-                        int imprisoned = pursuit((unit));
+
+                        /*int imprisoned = pursuit((unit));
                         blackImprisoned += imprisoned;
-                        blackDisordered += unit.strength;
+                        blackDisordered += unit.strength;*/
+
                         if (unit.strength <= MIN_SOLDIERS) {
                             int s = unit.surrender();
                             blackImprisoned += s;
-                            blackDisordered -= s;
+
+                            /*blackDisordered -= s;*/
                         }
                         if (unit != null) {
                             unit.isDisordered = false;
@@ -606,8 +617,10 @@ public class Fighting {
                     whiteRouted.add(u);
                     Force f = u.superForce;
                     u.route();
-                    whiteImprisoned += pursuit(u);
-                    whiteDisordered += u.strength;
+
+                    /*whiteImprisoned += pursuit(u);
+                    whiteDisordered += u.strength;*/
+
                     f.surrender();
                     white.remove(f);
 
@@ -624,8 +637,10 @@ public class Fighting {
                     blackRouted.add(u);
                     Force f = u.superForce;
                     u.route();
-                    blackImprisoned += pursuit(u);
-                    blackDisordered += u.strength;
+
+                    /*blackImprisoned += pursuit(u);
+                    blackDisordered += u.strength;*/
+
                     f.surrender();
                     black.remove(f);
                 }
@@ -654,6 +669,23 @@ public class Fighting {
                 }
             }
 
+        }
+
+        if (winner == 1) {
+            for (Force f: blackRetreaters) f.retreat();
+            for (Unit u: blackRouted) {
+                blackImprisoned += pursuit(u);
+                blackDisordered += u.strength;
+            }
+            for (Unit u: whiteRouted) whiteDisordered += u.strength;
+        }
+        if (winner == -1) {
+            for (Force f: whiteRetreaters) f.retreat();
+            for (Unit u: whiteRouted) {
+                whiteImprisoned += pursuit(u);
+                whiteDisordered += u.strength;
+            }
+            for (Unit u: blackRouted) blackDisordered += u.strength;
         }
         System.out.println("CHECK. STAGE " + stage);
         System.out.println("White Unit Length: " + whiteUnits.size() + " Units: " + whiteUnits);
