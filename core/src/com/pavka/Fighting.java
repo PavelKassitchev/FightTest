@@ -13,7 +13,7 @@ public class Fighting {
     public static final int FIRE_ON_UNIT = 40;
     public static final double CASUALITY_INTO_MORALE = 3.3;
     public static final int CHARGE_ON_ENEMY = 30;
-    public static final int PURSUIT_CHARGE = 50;
+    public static final int PURSUIT_CHARGE = 60;
     public static final int PURSUIT_ON_RETREATER = 35;
     public static final double PURSUIT_ARTILLERY_FACTOR = 1.5;
     public static final double PURSUIT_CAVALRY_FACTOR = 0.5;
@@ -22,8 +22,8 @@ public class Fighting {
     public static final double MORALE_PENALTY = -0.03;
     public static final double MORALE_BONUS = 0.03;
     public static final double SMALL_MORALE_BONUS = 0.02;
-    public static final double VICTORY_BONUS = 0.5;
-    public static final double SMALL_VICTORY_BONUS = 0.2;
+    public static final double VICTORY_BONUS = 0.55;
+    public static final double SMALL_VICTORY_BONUS = 0.35;
     public static final double LONG_DISTANCE_FIRE = 0.65;
     public static final double NEXT_BONUS = 0.05;
     public static final double NEXT_NEXT_BONUS = 0.1;
@@ -346,7 +346,7 @@ public class Fighting {
                 if (u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
                     if (whiteShaken.add(u)) {
                         whiteCasualties += hitUnit(u, randomFactor * fireOnWhite * hex.getFireDefenseFactor(u) / scale,
-                                randomFactor * chargeOnWhite * hex.getChargeDefenseFactor(u) * (1 - circlingFactor) / scale);
+                                0);
 
                         //whiteDisordered += u.strength;
                         w++;
@@ -393,7 +393,7 @@ public class Fighting {
                 if (u.morale < MIN_MORALE || u.strength <= MIN_SOLDIERS) {
                     if (blackShaken.add(u)) {
                         blackCasualties += hitUnit(u, randomFactor * fireOnBlack * hex.getFireDefenseFactor(u) / scale,
-                                randomFactor * chargeOnBlack * hex.getChargeDefenseFactor(u) * (1 + circlingFactor) / scale);
+                                0);
                         //blackDisordered += u.strength;
                         b++;
                         u.isDisordered = true;
