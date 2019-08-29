@@ -33,7 +33,7 @@ public class Fighting {
     public static final double CHARGE_ON_ARTILLERY = 1.5;
     public static final double CHARGE_ON_CAVALRY = 0.5;
 
-    public static final double FIRE_COMPOSITION_BONUS = 4.0;
+    public static final double FIRE_COMPOSITION_BONUS = 2.0;
 
     private Hex hex;
 
