@@ -33,6 +33,8 @@ public class Fighting {
     public static final double CHARGE_ON_ARTILLERY = 1.5;
     public static final double CHARGE_ON_CAVALRY = 0.5;
 
+    public static final double FIRE_COMPOSITION_BONUS = 4.0;
+
     private Hex hex;
 
     HashMap<Force, Integer> white;
@@ -104,6 +106,21 @@ public class Fighting {
 
         whiteStrength = whiteInitStrength;
         blackStrength = blackInitStrength;
+    }
+
+    private double getCompositionBonus(int color) {
+        double composition = 0;
+        switch(color) {
+            case WHITE:
+                if (whiteSquadrons / 4.0 > whiteBatteries) composition = whiteBatteries;
+                else composition = whiteSquadrons / 4.0;
+                break;
+            case BLACK:
+                if (blackSquadrons / 4.0 > blackBatteries) composition = blackBatteries;
+                else composition = blackSquadrons / 4.0;
+                break;
+        }
+        return composition * FIRE_COMPOSITION_BONUS;
     }
 
     private void clear() {
@@ -318,9 +335,9 @@ public class Fighting {
 
             double circlingFactor = whiteDirectionBonus - blackDirectionBonus;
             //System.out.println("Circling: " + circlingFactor + " Stage: " + stage);
-            double fireOnBlack = FIRE_ON_UNIT * whiteFire / blackStrength;
+            double fireOnBlack = FIRE_ON_UNIT * (whiteFire + getCompositionBonus(WHITE)) / blackStrength;
             //System.out.println("Fire on black " + fireOnBlack);
-            double fireOnWhite = FIRE_ON_UNIT * blackFire / whiteStrength;
+            double fireOnWhite = FIRE_ON_UNIT * (blackFire + getCompositionBonus(BLACK))/ whiteStrength;
             //System.out.println("Fire on white " + fireOnWhite);
             double chargeOnBlack = -(CHARGE_ON_ENEMY * whiteCharge / blackStrength);
             //System.out.println("Charge on black " + chargeOnBlack);
