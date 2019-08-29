@@ -762,9 +762,13 @@ public class Fighting {
         System.out.println();
         System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
         System.out.println("WHITE: final strength - " + whiteFinal + " and " + whiteInHex + " retreated - " + whiteRetreat + " routed - " + whiteDisordered);
+        if(!white.isEmpty()) System.out.println("MORALE = " + getAverageMorale(white.keySet()));
+        else System.out.println("MORALE = " + getAverageMorale(whiteRetreaters));
         System.out.println();
         System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
         System.out.println("BLACK: final strength - " + blackFinal + " and " + blackInHex + " retreated - " + blackRetreat + " routed - " + blackDisordered);
+        if(!black.isEmpty()) System.out.println("MORALE = " + getAverageMorale(black.keySet()));
+        else System.out.println("MORALE = " + getAverageMorale(blackRetreaters));
         System.out.println();
     }
 
@@ -891,6 +895,17 @@ public class Fighting {
         }
         return prisoners;
     }
+
+    private double getAverageMorale(Collection<Force> forces) {
+        int sumStrength = 0;
+        double sumMorale = 0;
+        for (Force force: forces){
+            sumStrength += force.strength;
+            sumMorale += force.morale * force.strength;
+        }
+        return sumMorale / sumStrength;
+    }
+
 
     private Force getEnemyRandomForce(Force force) {
         Set<Force> enemy = null;
