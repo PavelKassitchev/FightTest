@@ -132,6 +132,27 @@ public class FightTest {
         System.out.println("White wins = " + a + " Black wins = " + d + " Vague " + n);
     }
 
+    private static void combinedFight(int fi, int fc, int fa, int ai, int ac, int aa) {
+        Hex hex = new Hex();
+        Force f = createForce(hex, FRANCE, fi, fc, fa);
+        Force a = createForce(hex, AUSTRIA, ai, ac, aa);
+        Fighting fighting = hex.startFighting();
+        fighting.resolve();
+        hex = new Hex();
+        if(!fighting.whiteRetreaters.isEmpty()) {
+            for(Force force: fighting.whiteRetreaters) force.moveTo(hex);
+            a.moveTo(hex);
+            System.out.println("White retreated: " + hex.whiteForces + " Black: " + hex.blackForces);
+        }
+        if(!fighting.blackRetreaters.isEmpty()) {
+            for(Force force: fighting.blackRetreaters) force.moveTo(hex);
+            f.moveTo(hex);
+            System.out.println("White: " + hex.whiteForces + " Black retreated: " + hex.blackForces);
+        }
+        fighting = hex.startFighting();
+        fighting.resolve();
+    }
+
     public static void main(String[] args) {
         /*Force france = new Battalion(FRANCE, hex);
         Force france1 = new Battalion(FRANCE, hex);
@@ -151,7 +172,8 @@ public class FightTest {
         //multipleHerac();
         //Force france = createForce(FRANCE, 0, 3, 1);
         //Force austria = createForce(AUSTRIA, 1, 0, 1);
-        getStat(2, 0, 0, 0, 1, 2);
+        //getStat(1, 0, 0, 0, 1, 1);
+        combinedFight(1, 0,0, 0,1, 1);
 
         //Corps and divisions
         /*Force f = createDivision(FRANCE);

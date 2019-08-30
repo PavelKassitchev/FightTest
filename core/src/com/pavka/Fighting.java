@@ -34,6 +34,7 @@ public class Fighting {
     public static final double CHARGE_ON_CAVALRY = 0.5;
 
     public static final double FIRE_COMPOSITION_BONUS = 2.0;
+    public static final double NO_SCREEN_PENALTY = 1.5;
 
     private Hex hex;
 
@@ -110,17 +111,22 @@ public class Fighting {
 
     private double getCompositionBonus(int color) {
         double composition = 0;
-        switch(color) {
+        int screen = 0;
+        switch (color) {
             case WHITE:
                 if (whiteSquadrons / 4.0 > whiteBatteries) composition = whiteBatteries;
                 else composition = whiteSquadrons / 4.0;
+                if (whiteBatteries > (whiteBattalions + whiteSquadrons))
+                    screen = whiteBatteries - whiteBattalions - whiteSquadrons;
                 break;
             case BLACK:
                 if (blackSquadrons / 4.0 > blackBatteries) composition = blackBatteries;
                 else composition = blackSquadrons / 4.0;
+                if (blackBatteries > (blackBattalions + blackSquadrons))
+                    screen = blackBatteries - blackBattalions - blackSquadrons;
                 break;
         }
-        return composition * FIRE_COMPOSITION_BONUS;
+        return composition * FIRE_COMPOSITION_BONUS - screen * NO_SCREEN_PENALTY;
     }
 
     private void clear() {
@@ -337,7 +343,7 @@ public class Fighting {
             //System.out.println("Circling: " + circlingFactor + " Stage: " + stage);
             double fireOnBlack = FIRE_ON_UNIT * (whiteFire + getCompositionBonus(WHITE)) / blackStrength;
             //System.out.println("Fire on black " + fireOnBlack);
-            double fireOnWhite = FIRE_ON_UNIT * (blackFire + getCompositionBonus(BLACK))/ whiteStrength;
+            double fireOnWhite = FIRE_ON_UNIT * (blackFire + getCompositionBonus(BLACK)) / whiteStrength;
             //System.out.println("Fire on white " + fireOnWhite);
             double chargeOnBlack = -(CHARGE_ON_ENEMY * whiteCharge / blackStrength);
             //System.out.println("Charge on black " + chargeOnBlack);
@@ -690,22 +696,22 @@ public class Fighting {
         }
 
         if (winner == 1) {
-            for (Force f: blackRetreaters) f.retreat();
-            for (Unit u: blackRouted) {
+            for (Force f : blackRetreaters) f.retreat();
+            for (Unit u : blackRouted) {
                 blackImprisoned += pursuit(u);
                 blackDisordered += u.strength;
             }
-            for (Unit u: whiteRouted) whiteDisordered += u.strength;
+            for (Unit u : whiteRouted) whiteDisordered += u.strength;
         }
         if (winner == -1) {
-            for (Force f: whiteRetreaters) f.retreat();
-            for (Unit u: whiteRouted) {
+            for (Force f : whiteRetreaters) f.retreat();
+            for (Unit u : whiteRouted) {
                 whiteImprisoned += pursuit(u);
                 System.out.println("White routed and pursuited: " + u.strength);
                 System.out.println("Before: " + whiteDisordered + " imprisoned: " + whiteImprisoned);
                 whiteDisordered += u.strength;
             }
-            for (Unit u: blackRouted) blackDisordered += u.strength;
+            for (Unit u : blackRouted) blackDisordered += u.strength;
         }
         System.out.println("CHECK. STAGE " + stage);
         System.out.println("White Unit Length: " + whiteUnits.size() + " Units: " + whiteUnits);
@@ -779,13 +785,15 @@ public class Fighting {
         System.out.println();
         System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
         System.out.println("WHITE: final strength - " + whiteFinal + " and " + whiteInHex + " retreated - " + whiteRetreat + " routed - " + whiteDisordered);
-        if(!white.isEmpty()) System.out.println("MORALE = " + getAverageMorale(white.keySet()));
-        else System.out.println("MORALE = " + getAverageMorale(whiteRetreaters));
+        if (!white.isEmpty()) System.out.println("MORALE = " + getAverageMorale(white.keySet()));
+        else if(!whiteRetreaters.isEmpty()) System.out.println("MORALE = " + getAverageMorale(whiteRetreaters));
+        else System.out.println("Routed morale = " + getAverageMorale(whiteRouted));
         System.out.println();
         System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
         System.out.println("BLACK: final strength - " + blackFinal + " and " + blackInHex + " retreated - " + blackRetreat + " routed - " + blackDisordered);
-        if(!black.isEmpty()) System.out.println("MORALE = " + getAverageMorale(black.keySet()));
-        else System.out.println("MORALE = " + getAverageMorale(blackRetreaters));
+        if (!black.isEmpty()) System.out.println("MORALE = " + getAverageMorale(black.keySet()));
+        else if(!blackRetreaters.isEmpty()) System.out.println("MORALE = " + getAverageMorale(blackRetreaters));
+        else System.out.println("Routed morale = " + getAverageMorale(blackRouted));
         System.out.println();
     }
 
@@ -913,10 +921,10 @@ public class Fighting {
         return prisoners;
     }
 
-    private double getAverageMorale(Collection<Force> forces) {
+    private <T extends Force> double getAverageMorale(Collection<T> forces) {
         int sumStrength = 0;
         double sumMorale = 0;
-        for (Force force: forces){
+        for (Force force : forces) {
             sumStrength += force.strength;
             sumMorale += force.morale * force.strength;
         }
@@ -961,18 +969,22 @@ public class Fighting {
     }
 
     private int firing(Unit unit, double fire) {
-        int in = unit.strength;
-        double f = fire;
-        if (unit.type == ARTILLERY) {
-            f *= FIRE_ON_ARTILLERY;
-        }
-        unit.bearLoss(f);
-        int out = unit.strength;
-        int casualties = in - out;
-        unit.changeMorale(-(CASUALITY_INTO_MORALE) * f);
+        if (fire > 0) {
+            int in = unit.strength;
+            double f = fire;
+            if (unit.type == ARTILLERY) {
+                f *= FIRE_ON_ARTILLERY;
+            }
+            unit.bearLoss(f);
+            int out = unit.strength;
+            int casualties = in - out;
+            unit.changeMorale(-(CASUALITY_INTO_MORALE) * f);
 
-        return casualties;
+            return casualties;
+        }
+        return 0;
     }
+
 
     private void charging(Unit unit, double charge) {
         double c = charge;
