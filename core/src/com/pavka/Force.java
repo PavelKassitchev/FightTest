@@ -150,7 +150,9 @@ public class Force extends Image {
 
     @Override
     public String toString() {
-        return name + " men: " + strength + " morale: " + morale;
+        String type = "";
+        if(isUnit) type += " Unit of " +((Unit)this).type;
+        return name + " men: " + strength + " morale: " + morale + type;
     }
 
     public void retreat() {

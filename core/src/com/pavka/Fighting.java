@@ -301,16 +301,19 @@ public class Fighting {
         }
 
         if (onlyBatteries()) {
+            System.out.println("Artilleries retreat!");
             for (Force force : white.keySet()) whiteRetreaters.add(force);
             for (Force force : black.keySet()) blackRetreaters.add(force);
             isOver = true;
         }
         if (onlyWhiteBatteries()) {
+            System.out.println("White Artillery retreats!");
             for (Force force : white.keySet()) whiteRetreaters.add(force);
             isOver = true;
             winner = -1;
         }
         if (onlyBlackBatteries()) {
+            System.out.println("Black Artillery retreats!");
             for (Force force : black.keySet()) blackRetreaters.add(force);
             isOver = true;
             winner = 1;
