@@ -35,6 +35,7 @@ public class Fighting {
 
     public static final double FIRE_COMPOSITION_BONUS = 2.0;
     public static final double NO_SCREEN_PENALTY = 1.5;
+    public static final double MORALE_PURSUIT = 0.6;
 
     private Hex hex;
 
@@ -789,13 +790,13 @@ public class Fighting {
         System.out.println("WHITE: initial strength - " + whiteInitStrength + " killed - " + whiteCasualties + " imprisoned - " + whiteImprisoned);
         System.out.println("WHITE: final strength - " + whiteFinal + " and " + whiteInHex + " retreated - " + whiteRetreat + " routed - " + whiteDisordered);
         if (!white.isEmpty()) System.out.println("MORALE = " + getAverageMorale(white.keySet()));
-        else if(!whiteRetreaters.isEmpty()) System.out.println("MORALE = " + getAverageMorale(whiteRetreaters));
+        else if (!whiteRetreaters.isEmpty()) System.out.println("MORALE = " + getAverageMorale(whiteRetreaters));
         else System.out.println("Routed morale = " + getAverageMorale(whiteRouted));
         System.out.println();
         System.out.println("BLACK: initial strength - " + blackInitStrength + " killed - " + blackCasualties + " imprisoned - " + blackImprisoned);
         System.out.println("BLACK: final strength - " + blackFinal + " and " + blackInHex + " retreated - " + blackRetreat + " routed - " + blackDisordered);
         if (!black.isEmpty()) System.out.println("MORALE = " + getAverageMorale(black.keySet()));
-        else if(!blackRetreaters.isEmpty()) System.out.println("MORALE = " + getAverageMorale(blackRetreaters));
+        else if (!blackRetreaters.isEmpty()) System.out.println("MORALE = " + getAverageMorale(blackRetreaters));
         else System.out.println("Routed morale = " + getAverageMorale(blackRouted));
         System.out.println();
     }
@@ -832,16 +833,24 @@ public class Fighting {
                 } else {
                     //imprisoned = prisoners;
                     double ratio = (double) prisoners / force.strength;
-                    if (force.isUnit) imprisoned += ((Unit) force).bearLoss(ratio);
-                    else {
+                    System.out.println("RATIO FOR RETREATERS: " + ratio);
+                    if (force.isUnit) {
+                        imprisoned += ((Unit) force).bearLoss(ratio);
+                        ((Unit) force).changeMorale(-MORALE_PURSUIT * ratio / 2);
+                        System.out.println("Morale DROP: " + (MORALE_PURSUIT * ratio / 2));
+                    } else {
                         for (Unit u : force.battalions) {
                             imprisoned += u.bearLoss(ratio);
+                            u.changeMorale(-MORALE_PURSUIT * ratio / 2);
+                            System.out.println("Morale DROP: " + (MORALE_PURSUIT * ratio / 2));
                         }
                         for (Unit u : force.squadrons) {
                             imprisoned += u.bearLoss(ratio);
+                            u.changeMorale(-MORALE_PURSUIT * ratio / 2);
                         }
                         for (Unit u : force.batteries) {
                             imprisoned += u.bearLoss(ratio);
+                            u.changeMorale(-MORALE_PURSUIT * ratio / 2);
                         }
                     }
 
@@ -875,15 +884,21 @@ public class Fighting {
                 } else {
                     //imprisoned = prisoners;
                     double ratio = (double) prisoners / force.strength;
-                    if (force.isUnit) blackImprisoned += ((Unit) force).bearLoss(ratio);
+                    if (force.isUnit) {
+                        blackImprisoned += ((Unit) force).bearLoss(ratio);
+                        ((Unit) force).changeMorale(-MORALE_PURSUIT * ratio / 2);
+                    }
                     for (Unit u : force.battalions) {
                         imprisoned += u.bearLoss(ratio);
+                        u.changeMorale(-MORALE_PURSUIT * ratio / 2);
                     }
                     for (Unit u : force.squadrons) {
                         imprisoned += u.bearLoss(ratio);
+                        u.changeMorale(-MORALE_PURSUIT * ratio / 2);
                     }
                     for (Unit u : force.batteries) {
                         imprisoned += u.bearLoss(ratio);
+                        u.changeMorale(-MORALE_PURSUIT * ratio / 2);
                     }
 
                 }
@@ -908,6 +923,7 @@ public class Fighting {
                 double ratio = (double) catching / unit.strength;
                 System.out.println("RATIO - " + ratio);
                 prisoners += unit.bearLoss(ratio);
+                unit.changeMorale(-MORALE_PURSUIT * ratio);
             }
         }
         if (unit.nation.color == BLACK) {
@@ -919,6 +935,7 @@ public class Fighting {
             } else {
                 double ratio = (double) catching / unit.strength;
                 prisoners += unit.bearLoss(ratio);
+                unit.changeMorale(-MORALE_PURSUIT * ratio);
             }
         }
         return prisoners;
